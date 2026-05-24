@@ -1,4 +1,5 @@
 import './App.css'
+import HomePage from './pages/HomePage'
 import { routeTree } from './routeTree.gen'
 import { createRouter, RouterProvider} from "@tanstack/react-router"
 
@@ -16,14 +17,14 @@ declare module "@tanstack/react-router"{
 // }
 
 function App() {
-  return (
+  return null;
+  // return (
     
-    <div className="min-h-screen flex items-center justify-center">
-      <h1 className="text-5xl font-bold text-blue-500">
-        Tailwind działa 🚀
-      </h1>
-    </div>
-  );
+
+
+  //     <HomePage></HomePage>
+
+  // );
 }
 
 
