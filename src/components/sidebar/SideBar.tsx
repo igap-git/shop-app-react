@@ -8,7 +8,7 @@ export const Sidebar = ({
   children: ReactNode;
 }) => {
   return (
-    <aside className="w-72 h-screen border-r bg-white flex flex-col">
+    <aside className="w-72 h-max border-r bg-white flex flex-col">
       {children}
     </aside>
   );
