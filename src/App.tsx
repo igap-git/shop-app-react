@@ -1,5 +1,4 @@
 import './App.css'
-import HomePage from './pages/HomePage'
 import { routeTree } from './routeTree.gen'
 import { createRouter, RouterProvider} from "@tanstack/react-router"
 
@@ -18,13 +17,6 @@ declare module "@tanstack/react-router"{
 
 function App() {
   return null;
-  // return (
-    
-
-
-  //     <HomePage></HomePage>
-
-  // );
 }
 
 

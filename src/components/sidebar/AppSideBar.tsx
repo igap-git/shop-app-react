@@ -4,6 +4,7 @@ import {
     SidebarHeader,
     SidebarItem,
     SidebarLabel,
+    SidebarSearch,
     SidebarSection,
   } from "./SideBar";
   
@@ -14,48 +15,52 @@ import {
   
   import { useCategories } from "../../hooks/useCategories";
   
-  export function AppSidebar() {
-    const { data: categories, isLoading } = useCategories();
+  export function AppSidebar() 
+   {
+    const {
+      data: categories,
+      isLoading,
+    } = useCategories();
   
     return (
       <Sidebar>
-  
         <SidebarHeader>
           <SidebarSection>
+            <SidebarSearch
+              icon={
+                <MagnifyingGlassIcon className="w-5 h-5" />
+              }
+            />
   
-            <SidebarItem href="/search">
-              <MagnifyingGlassIcon className="w-5 h-5" />
-              <SidebarLabel>Search</SidebarLabel>
-            </SidebarItem>
-  
-
-            <SidebarItem href="/">
+            <SidebarItem to="/home">
               <HomeIcon className="w-5 h-5" />
-              <SidebarLabel>Home</SidebarLabel>
+              <SidebarLabel>
+                Home
+              </SidebarLabel>
             </SidebarItem>
-
           </SidebarSection>
         </SidebarHeader>
   
         <SidebarBody>
           <SidebarSection>
-  
             {isLoading && (
-              <SidebarLabel>Loading categories...</SidebarLabel>
+              <SidebarLabel>
+                Loading categories...
+              </SidebarLabel>
             )}
   
             {categories?.map((category) => (
               <SidebarItem
                 key={category}
-                href={`/category/${category}`}
+                to={`/category/${category}`}
               >
-                <SidebarLabel>{category}</SidebarLabel>
+                <SidebarLabel>
+                  {category}
+                </SidebarLabel>
               </SidebarItem>
             ))}
-  
           </SidebarSection>
         </SidebarBody>
-  
       </Sidebar>
     );
   }

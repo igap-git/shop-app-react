@@ -1,14 +1,9 @@
+import { AppProductGrid } from "../components/productgrid/AppProductGrid";
 
-import { AppNavbar } from "../components/navigation/AppNavbar";
-import { AppSidebar} from "../components/sidebar/AppSideBar";
-
-const HomePage = () => {
+export default function HomePage() {
   return (
     <div>
-        <AppNavbar></AppNavbar>
-      <AppSidebar></AppSidebar>
+      <AppProductGrid />
     </div>
   );
-};
-
-export default HomePage;
+}

@@ -1,4 +1,4 @@
-import { Outlet, Link, createRootRoute } from '@tanstack/react-router'
+import { createRootRoute } from '@tanstack/react-router'
 import MainLayout from '../layouts/MainLayout'
 
 
