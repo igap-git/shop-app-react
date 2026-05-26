@@ -1,8 +1,8 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { AppProductGrid } from '../components/productgrid/AppProductGrid'
+import HomePage from '../pages/HomePage'
 
 export const Route = createFileRoute('/home')({
-  component: AppProductGrid,
+  component: HomePage,
 })
 
 

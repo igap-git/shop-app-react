@@ -10,7 +10,9 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as ProfileRouteImport } from './routes/profile'
+import { Route as MycartRouteImport } from './routes/mycart'
 import { Route as HomeRouteImport } from './routes/home'
+import { Route as FavoritesRouteImport } from './routes/favorites'
 import { Route as ProductIdRouteImport } from './routes/product.$id'
 import { Route as CategoryCategoryRouteImport } from './routes/category.$category'
 
@@ -19,9 +21,19 @@ const ProfileRoute = ProfileRouteImport.update({
   path: '/profile',
   getParentRoute: () => rootRouteImport,
 } as any)
+const MycartRoute = MycartRouteImport.update({
+  id: '/mycart',
+  path: '/mycart',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const HomeRoute = HomeRouteImport.update({
   id: '/home',
   path: '/home',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FavoritesRoute = FavoritesRouteImport.update({
+  id: '/favorites',
+  path: '/favorites',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ProductIdRoute = ProductIdRouteImport.update({
@@ -36,34 +48,61 @@ const CategoryCategoryRoute = CategoryCategoryRouteImport.update({
 } as any)
 
 export interface FileRoutesByFullPath {
+  '/favorites': typeof FavoritesRoute
   '/home': typeof HomeRoute
+  '/mycart': typeof MycartRoute
   '/profile': typeof ProfileRoute
   '/category/$category': typeof CategoryCategoryRoute
   '/product/$id': typeof ProductIdRoute
 }
 export interface FileRoutesByTo {
+  '/favorites': typeof FavoritesRoute
   '/home': typeof HomeRoute
+  '/mycart': typeof MycartRoute
   '/profile': typeof ProfileRoute
   '/category/$category': typeof CategoryCategoryRoute
   '/product/$id': typeof ProductIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
+  '/favorites': typeof FavoritesRoute
   '/home': typeof HomeRoute
+  '/mycart': typeof MycartRoute
   '/profile': typeof ProfileRoute
   '/category/$category': typeof CategoryCategoryRoute
   '/product/$id': typeof ProductIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/home' | '/profile' | '/category/$category' | '/product/$id'
+  fullPaths:
+    | '/favorites'
+    | '/home'
+    | '/mycart'
+    | '/profile'
+    | '/category/$category'
+    | '/product/$id'
   fileRoutesByTo: FileRoutesByTo
-  to: '/home' | '/profile' | '/category/$category' | '/product/$id'
-  id: '__root__' | '/home' | '/profile' | '/category/$category' | '/product/$id'
+  to:
+    | '/favorites'
+    | '/home'
+    | '/mycart'
+    | '/profile'
+    | '/category/$category'
+    | '/product/$id'
+  id:
+    | '__root__'
+    | '/favorites'
+    | '/home'
+    | '/mycart'
+    | '/profile'
+    | '/category/$category'
+    | '/product/$id'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
+  FavoritesRoute: typeof FavoritesRoute
   HomeRoute: typeof HomeRoute
+  MycartRoute: typeof MycartRoute
   ProfileRoute: typeof ProfileRoute
   CategoryCategoryRoute: typeof CategoryCategoryRoute
   ProductIdRoute: typeof ProductIdRoute
@@ -78,11 +117,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProfileRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/mycart': {
+      id: '/mycart'
+      path: '/mycart'
+      fullPath: '/mycart'
+      preLoaderRoute: typeof MycartRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/home': {
       id: '/home'
       path: '/home'
       fullPath: '/home'
       preLoaderRoute: typeof HomeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/favorites': {
+      id: '/favorites'
+      path: '/favorites'
+      fullPath: '/favorites'
+      preLoaderRoute: typeof FavoritesRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/product/$id': {
@@ -103,7 +156,9 @@ declare module '@tanstack/react-router' {
 }
 
 const rootRouteChildren: RootRouteChildren = {
+  FavoritesRoute: FavoritesRoute,
   HomeRoute: HomeRoute,
+  MycartRoute: MycartRoute,
   ProfileRoute: ProfileRoute,
   CategoryCategoryRoute: CategoryCategoryRoute,
   ProductIdRoute: ProductIdRoute,
