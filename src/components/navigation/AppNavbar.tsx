@@ -1,5 +1,6 @@
 import {
     Navbar,
+    NavbarDivider,
     NavbarItem,
     NavbarSection,
   } from "./NavBar";
@@ -20,6 +21,8 @@ import {
         </div>
   
         <NavbarSection>
+        <NavbarItem to="/mycart">My Cart</NavbarItem>
+        <NavbarDivider></NavbarDivider>
           <NavbarItem to="/profile">Profile</NavbarItem>
         </NavbarSection>
       </Navbar>

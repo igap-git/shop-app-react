@@ -1,8 +1,14 @@
-import { Route } from "../../routes/home";
+import { useSearch } from "@tanstack/react-router";
 import { ProductGrid } from "./ProductGrid";
 
-export function AppProductGrid() {
-  const searchParams = Route.useSearch() as {
+export function AppProductGrid({
+  favoritesOnly = false,
+}: {
+  favoritesOnly?: boolean;
+}) {
+  const searchParams = useSearch({
+    strict: false,
+  }) as {
     search?: string;
     category?: string;
     page?: number;
@@ -13,7 +19,10 @@ export function AppProductGrid() {
       <ProductGrid
         search={searchParams.search}
         category={searchParams.category}
-        page={Number(searchParams.page ?? 1)}
+        page={Number(
+          searchParams.page ?? 1
+        )}
+        favoritesOnly={favoritesOnly}
       />
     </section>
   );

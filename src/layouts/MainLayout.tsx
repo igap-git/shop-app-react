@@ -12,15 +12,17 @@ import { AppSidebar } from "../components/sidebar/AppSideBar";
       pathname.startsWith(
         "/product/"
       );
+
+    const isMyCartPage = pathname.startsWith("/mycart");  
   
     return (
       <div className="flex flex-col min-h-screen">
         <AppNavbar />
   
         <div className="flex flex-1">
-          {!isProductPage && (
-            <AppSidebar />
-          )}
+        {!isProductPage && !isMyCartPage && (
+          <AppSidebar />
+        )}
   
           <div className="flex-1 p-6">
             <Outlet />

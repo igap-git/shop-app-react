@@ -10,6 +10,7 @@ import {
   
   import {
     HomeIcon,
+    HeartIcon,
     MagnifyingGlassIcon,
   } from "@heroicons/react/24/solid";
   
@@ -36,6 +37,13 @@ import {
               <HomeIcon className="w-5 h-5" />
               <SidebarLabel>
                 Home
+              </SidebarLabel>
+            </SidebarItem>
+
+            <SidebarItem to="/favorites">
+              <HeartIcon className="w-5 h-5" />
+              <SidebarLabel>
+                Favorites
               </SidebarLabel>
             </SidebarItem>
           </SidebarSection>

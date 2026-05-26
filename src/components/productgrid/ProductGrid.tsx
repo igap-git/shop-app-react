@@ -1,49 +1,78 @@
 import { useProducts } from "../../hooks/useProducts";
-import { Link, useNavigate } from "@tanstack/react-router";
+import { Link } from "@tanstack/react-router";
+import { Heart } from "lucide-react";
+import { useEffect, useState } from "react";
 
 export function ProductGrid({
-    category,
-    search,
-    page = 1,
-  }: {
-    category?: string;
-    search?: string;
-    page?: number;
-  }){
-  const navigate = useNavigate();
-
+  category,
+  search,
+  page = 1,
+  favoritesOnly = false,
+}: {
+  category?: string;
+  search?: string;
+  page?: number;
+  favoritesOnly?: boolean;
+}) {
   const { data, isLoading, error } = useProducts(
-    category,
-    search
+    favoritesOnly ? undefined : category,
+    favoritesOnly ? undefined : search
   );
 
-  const currentPage = page;
+  const [favoriteProducts, setFavoriteProducts] = useState<any[]>([]);
+
+  useEffect(() => {
+    const savedFavorites = localStorage.getItem("favorites");
+
+    setFavoriteProducts(
+      savedFavorites ? JSON.parse(savedFavorites) : []
+    );
+  }, []);
+
+  const isFavorite = (productId: number) => {
+    return favoriteProducts.some(
+      (product: any) => product.id === productId
+    );
+  };
+
+  const toggleFavorite = (
+    e: React.MouseEvent,
+    product: any
+  ) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    const updatedFavorites = isFavorite(product.id)
+      ? favoriteProducts.filter(
+          (item: any) => item.id !== product.id
+        )
+      : [...favoriteProducts, product];
+
+    setFavoriteProducts(updatedFavorites);
+
+    localStorage.setItem(
+      "favorites",
+      JSON.stringify(updatedFavorites)
+    );
+  };
+
+  const allProducts = data?.products ?? [];
+
+  const products = favoritesOnly
+    ? favoriteProducts
+    : allProducts;
 
   const productsPerPage = 8;
-  const products = data?.products ?? [];
-
   const totalPages = Math.ceil(
     products.length / productsPerPage
   );
 
-  const startIndex =
-    (currentPage - 1) * productsPerPage;
+  const startIndex = (page - 1) * productsPerPage;
 
   const currentProducts = products.slice(
     startIndex,
     startIndex + productsPerPage
   );
-
-  const changePage = (newPage: number) => {
-    navigate({
-      to: "/home",
-      search: {
-        page: newPage,
-        category,
-        search,
-      },
-    });
-  };
 
   if (isLoading) {
     return (
@@ -63,6 +92,12 @@ export function ProductGrid({
 
   return (
     <div>
+      {favoritesOnly && products.length === 0 && (
+        <div className="text-center py-10 text-gray-500">
+          Brak ulubionych produktów.
+        </div>
+      )}
+
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
         {currentProducts.map((product: any) => (
           <Link
@@ -72,12 +107,28 @@ export function ProductGrid({
               id: String(product.id),
             }}
             search={{
-              page: currentPage,
+              page,
               category,
               search,
             }}
-            className="group bg-white border rounded-2xl overflow-hidden hover:shadow-lg transition block cursor-pointer"
+            className="group bg-white border rounded-2xl overflow-hidden hover:shadow-lg transition block cursor-pointer relative"
           >
+            <button
+              type="button"
+              onClick={(e) =>
+                toggleFavorite(e, product)
+              }
+              className="absolute top-3 right-3 z-10 bg-white/90 rounded-full p-2 shadow hover:scale-110 transition"
+            >
+              <Heart
+                className={`w-5 h-5 transition ${
+                  isFavorite(product.id)
+                    ? "fill-red-500 text-red-500"
+                    : "text-gray-500"
+                }`}
+              />
+            </button>
+
             <div className="aspect-square bg-gray-100 overflow-hidden">
               <img
                 src={product.thumbnail}
@@ -99,37 +150,63 @@ export function ProductGrid({
         ))}
       </div>
 
-      <div className="flex justify-center items-center gap-2 mt-12">
-        <button
-          onClick={() => changePage(currentPage - 1)}
-          disabled={currentPage === 1}
-          className="px-4 py-2 border rounded-lg disabled:opacity-50"
-        >
-          Previous
-        </button>
-
-        {Array.from({ length: totalPages }, (_, index) => (
-          <button
-            key={index}
-            onClick={() => changePage(index + 1)}
-            className={`px-4 py-2 rounded-lg border ${
-              currentPage === index + 1
-                ? "bg-black text-white"
+      {totalPages > 1 && (
+        <div className="flex justify-center items-center gap-2 mt-12">
+          <Link
+            search={(prev) => ({
+              ...prev,
+              page: page - 1,
+              category,
+              search,
+            })}
+            className={`px-4 py-2 border rounded-lg ${
+              page === 1
+                ? "pointer-events-none opacity-50"
                 : ""
             }`}
           >
-            {index + 1}
-          </button>
-        ))}
+            Previous
+          </Link>
 
-        <button
-          onClick={() => changePage(currentPage + 1)}
-          disabled={currentPage === totalPages}
-          className="px-4 py-2 border rounded-lg disabled:opacity-50"
-        >
-          Next
-        </button>
-      </div>
+          {Array.from(
+            { length: totalPages },
+            (_, index) => (
+              <Link
+                key={index}
+                search={(prev) => ({
+                  ...prev,
+                  page: index + 1,
+                  category,
+                  search,
+                })}
+                className={`px-4 py-2 rounded-lg border ${
+                  page === index + 1
+                    ? "bg-black text-white"
+                    : ""
+                }`}
+              >
+                {index + 1}
+              </Link>
+            )
+          )}
+
+          <Link
+            search={(prev) => ({
+              ...prev,
+              page: page + 1,
+              category,
+              search,
+            })}
+            className={`px-4 py-2 border rounded-lg ${
+              page === totalPages
+                ? "pointer-events-none opacity-50"
+                : ""
+            }`}
+          >
+            Next
+          </Link>
+        </div>
+      )}
     </div>
   );
 }

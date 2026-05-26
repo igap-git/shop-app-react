@@ -74,11 +74,9 @@ export function ProductDetails({id}:{id:number}) {
             </p>
           </div>
 
-          <button className="mt-8 px-6 py-3 bg-black text-white rounded-xl hover:bg-gray-800 transition">
-            Add to cart
-          </button>
         </div>
       </div>
     </div>
   );
 }
+

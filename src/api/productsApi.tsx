@@ -5,10 +5,10 @@ export const fetchProducts = async (
     let url = "https://dummyjson.com/products";
   
     if (search) {
-      url = `https://dummyjson.com/products/search?q=${search}`;
-    } else if (category) {
-      url = `https://dummyjson.com/products/category/${category}`;
-    }
+        url = `https://dummyjson.com/products/search?q=${search}&limit=0`;
+      } else if (category) {
+        url = `https://dummyjson.com/products/category/${category}?limit=0`;
+      }
   
     const response = await fetch(url);
   
