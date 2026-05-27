@@ -13,6 +13,7 @@ import { Route as ProfileRouteImport } from './routes/profile'
 import { Route as MycartRouteImport } from './routes/mycart'
 import { Route as HomeRouteImport } from './routes/home'
 import { Route as FavoritesRouteImport } from './routes/favorites'
+import { Route as IndexRouteImport } from './routes/index'
 import { Route as ProductIdRouteImport } from './routes/product.$id'
 import { Route as CategoryCategoryRouteImport } from './routes/category.$category'
 
@@ -36,6 +37,11 @@ const FavoritesRoute = FavoritesRouteImport.update({
   path: '/favorites',
   getParentRoute: () => rootRouteImport,
 } as any)
+const IndexRoute = IndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ProductIdRoute = ProductIdRouteImport.update({
   id: '/product/$id',
   path: '/product/$id',
@@ -48,6 +54,7 @@ const CategoryCategoryRoute = CategoryCategoryRouteImport.update({
 } as any)
 
 export interface FileRoutesByFullPath {
+  '/': typeof IndexRoute
   '/favorites': typeof FavoritesRoute
   '/home': typeof HomeRoute
   '/mycart': typeof MycartRoute
@@ -56,6 +63,7 @@ export interface FileRoutesByFullPath {
   '/product/$id': typeof ProductIdRoute
 }
 export interface FileRoutesByTo {
+  '/': typeof IndexRoute
   '/favorites': typeof FavoritesRoute
   '/home': typeof HomeRoute
   '/mycart': typeof MycartRoute
@@ -65,6 +73,7 @@ export interface FileRoutesByTo {
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
+  '/': typeof IndexRoute
   '/favorites': typeof FavoritesRoute
   '/home': typeof HomeRoute
   '/mycart': typeof MycartRoute
@@ -75,6 +84,7 @@ export interface FileRoutesById {
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
+    | '/'
     | '/favorites'
     | '/home'
     | '/mycart'
@@ -83,6 +93,7 @@ export interface FileRouteTypes {
     | '/product/$id'
   fileRoutesByTo: FileRoutesByTo
   to:
+    | '/'
     | '/favorites'
     | '/home'
     | '/mycart'
@@ -91,6 +102,7 @@ export interface FileRouteTypes {
     | '/product/$id'
   id:
     | '__root__'
+    | '/'
     | '/favorites'
     | '/home'
     | '/mycart'
@@ -100,6 +112,7 @@ export interface FileRouteTypes {
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
+  IndexRoute: typeof IndexRoute
   FavoritesRoute: typeof FavoritesRoute
   HomeRoute: typeof HomeRoute
   MycartRoute: typeof MycartRoute
@@ -138,6 +151,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof FavoritesRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/': {
+      id: '/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/product/$id': {
       id: '/product/$id'
       path: '/product/$id'
@@ -156,6 +176,7 @@ declare module '@tanstack/react-router' {
 }
 
 const rootRouteChildren: RootRouteChildren = {
+  IndexRoute: IndexRoute,
   FavoritesRoute: FavoritesRoute,
   HomeRoute: HomeRoute,
   MycartRoute: MycartRoute,

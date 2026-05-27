@@ -57,15 +57,16 @@ const toggleFavorite = () => {
     };
 
     const handleAddToCart = () => {
-        if (!product) return;
+        if (!product || isAddedToCart) return;
       
-        const savedCart = localStorage.getItem("cart");
+        const savedCart =
+          localStorage.getItem("cart");
       
-        const cart = savedCart
+        const cart: CartItem[] = savedCart
           ? JSON.parse(savedCart)
           : [];
       
-        const productToAdd = {
+        const productToAdd: CartItem = {
           id: product.id,
           title: product.title,
           price: product.price,
@@ -74,14 +75,14 @@ const toggleFavorite = () => {
         };
       
         const isInCart = cart.some(
-          (item:CartItem) => item.id === productToAdd.id
+          (item) => item.id === product.id
         );
       
-        let updatedCart;
+        let updatedCart: CartItem[];
       
         if (isInCart) {
-          updatedCart = cart.map((item:CartItem) =>
-            item.id === productToAdd.id
+          updatedCart = cart.map((item) =>
+            item.id === product.id
               ? {
                   ...item,
                   quantity: item.quantity + 1,
@@ -89,7 +90,10 @@ const toggleFavorite = () => {
               : item
           );
         } else {
-          updatedCart = [...cart, productToAdd];
+          updatedCart = [
+            ...cart,
+            productToAdd,
+          ];
         }
       
         localStorage.setItem(
@@ -98,6 +102,10 @@ const toggleFavorite = () => {
         );
       
         setIsAddedToCart(true);
+      
+        setTimeout(() => {
+          setIsAddedToCart(false);
+        }, 2000);
       };
 
   return (
@@ -132,20 +140,21 @@ const toggleFavorite = () => {
           </button>
 
           <button
-            type="button"
-            onClick={handleAddToCart}
-            className={`flex items-center gap-2 px-5 py-3 rounded-xl font-medium transition ${
-              isAddedToCart
-                ? "bg-green-600 text-white"
-                : "bg-black text-white hover:opacity-90"
-            }`}
-          >
-            <ShoppingCart size={18} />
+  type="button"
+  onClick={handleAddToCart}
+  disabled={isAddedToCart}
+  className={`flex items-center gap-2 px-5 py-3 rounded-xl font-medium transition disabled:cursor-not-allowed ${
+    isAddedToCart
+      ? "bg-green-600 text-white"
+      : "bg-black text-white hover:opacity-90"
+  }`}
+>
+  <ShoppingCart size={18} />
 
-            {isAddedToCart
-              ? "Added"
-              : "Add to cart"}
-          </button>
+  {isAddedToCart
+    ? "Added to cart"
+    : "Add to cart"}
+</button>
         </div>
       </div>
 

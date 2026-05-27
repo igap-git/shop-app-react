@@ -1,78 +1,198 @@
 import { useProducts } from "../../hooks/useProducts";
-import { Link } from "@tanstack/react-router";
-import { Heart } from "lucide-react";
+import { Link, useNavigate } from "@tanstack/react-router";
+import { Heart, Plus } from "lucide-react";
 import { useEffect, useState } from "react";
+import type { CartItem } from "../../interfaces/cartitem.interface";
 
 export function ProductGrid({
-  category,
-  search,
-  page = 1,
-  favoritesOnly = false,
-}: {
-  category?: string;
-  search?: string;
-  page?: number;
-  favoritesOnly?: boolean;
-}) {
-  const { data, isLoading, error } = useProducts(
+    category,
+    search,
+    page = 1,
+    favoritesOnly = false,
+  }: {
+    category?: string;
+    search?: string;
+    page?: number;
+    favoritesOnly?: boolean;
+  }) {
+  const navigate = useNavigate();
+
+  const [addedProducts, setAddedProducts] = useState<number[]>([]);
+
+  const { data, isLoading, error } =
+  useProducts(
     favoritesOnly ? undefined : category,
     favoritesOnly ? undefined : search
   );
 
-  const [favoriteProducts, setFavoriteProducts] = useState<any[]>([]);
+    const [favorites, setFavorites] = useState<number[]>([]);
+  
+    useEffect(() => {
+        const loadFavorites = () => {
+          const savedFavorites =
+            localStorage.getItem("favorites");
+      
+            setFavorites(
+                savedFavorites
+                  ? JSON.parse(savedFavorites).map(
+                      (item: any) => item.id
+                    )
+                  : []
+              );
+        };
+      
+        loadFavorites();
+      
+        window.addEventListener(
+          "focus",
+          loadFavorites
+        );
+      
+        return () => {
+          window.removeEventListener(
+            "focus",
+            loadFavorites
+          );
+        };
+      }, []);
 
-  useEffect(() => {
-    const savedFavorites = localStorage.getItem("favorites");
+      const toggleFavorite = (
+        e: React.MouseEvent,
+        product: any
+      ) => {
+        e.preventDefault();
+        e.stopPropagation();
+      
+        const savedFavorites =
+          localStorage.getItem("favorites");
+      
+        const favoritesProducts = savedFavorites
+          ? JSON.parse(savedFavorites)
+          : [];
+      
+        const exists = favoritesProducts.some(
+          (item: any) => item.id === product.id
+        );
+      
+        const updatedFavorites = exists
+          ? favoritesProducts.filter(
+              (item: any) => item.id !== product.id
+            )
+          : [...favoritesProducts, product];
+      
+        localStorage.setItem(
+          "favorites",
+          JSON.stringify(updatedFavorites)
+        );
+      
+        setFavorites(
+          updatedFavorites.map((item: any) => item.id)
+        );
+        
+      };
 
-    setFavoriteProducts(
-      savedFavorites ? JSON.parse(savedFavorites) : []
-    );
-  }, []);
-
-  const isFavorite = (productId: number) => {
-    return favoriteProducts.some(
-      (product: any) => product.id === productId
-    );
-  };
-
-  const toggleFavorite = (
-    e: React.MouseEvent,
-    product: any
-  ) => {
-    e.preventDefault();
-    e.stopPropagation();
-
-    const updatedFavorites = isFavorite(product.id)
-      ? favoriteProducts.filter(
-          (item: any) => item.id !== product.id
-        )
-      : [...favoriteProducts, product];
-
-    setFavoriteProducts(updatedFavorites);
-
-    localStorage.setItem(
-      "favorites",
-      JSON.stringify(updatedFavorites)
-    );
-  };
-
-  const allProducts = data?.products ?? [];
-
-  const products = favoritesOnly
-    ? favoriteProducts
-    : allProducts;
+  const currentPage = page;
 
   const productsPerPage = 8;
+  const allProducts =
+  data?.products ?? [];
+
+const savedFavorites =
+  localStorage.getItem("favorites");
+
+const favoriteProducts = savedFavorites
+  ? JSON.parse(savedFavorites)
+  : [];
+
+const products = favoritesOnly
+  ? favoriteProducts
+  : allProducts;
+
   const totalPages = Math.ceil(
     products.length / productsPerPage
   );
 
-  const startIndex = (page - 1) * productsPerPage;
+  const startIndex =
+    (currentPage - 1) * productsPerPage;
 
   const currentProducts = products.slice(
     startIndex,
     startIndex + productsPerPage
   );
+
+  const changePage = (newPage: number) => {
+    navigate({
+      to: "/home",
+      search: {
+        page: newPage,
+        category,
+        search,
+      },
+    });
+  };
+
+  const handleAddToCart = (
+    e: React.MouseEvent,
+    product: any
+  ) => {
+    e.preventDefault();
+    e.stopPropagation();
+  
+    const savedCart =
+      localStorage.getItem("cart");
+  
+    const cart: CartItem[] = savedCart
+      ? JSON.parse(savedCart)
+      : [];
+  
+    const productToAdd: CartItem = {
+      id: product.id,
+      title: product.title,
+      price: product.price,
+      thumbnail: product.thumbnail,
+      quantity: 1,
+    };
+  
+    const isInCart = cart.some(
+      (item) => item.id === product.id
+    );
+  
+    let updatedCart: CartItem[];
+  
+    if (isInCart) {
+      updatedCart = cart.map((item) =>
+        item.id === product.id
+          ? {
+              ...item,
+              quantity: item.quantity + 1,
+            }
+          : item
+      );
+    } else {
+      updatedCart = [
+        ...cart,
+        productToAdd,
+      ];
+    }
+  
+    localStorage.setItem(
+      "cart",
+      JSON.stringify(updatedCart)
+    );
+  
+    setAddedProducts((prev) => [
+      ...prev,
+      product.id,
+    ]);
+  
+    setTimeout(() => {
+      setAddedProducts((prev) =>
+        prev.filter(
+          (id) => id !== product.id
+        )
+      );
+    }, 1500);
+  };
 
   if (isLoading) {
     return (
@@ -92,12 +212,6 @@ export function ProductGrid({
 
   return (
     <div>
-      {favoritesOnly && products.length === 0 && (
-        <div className="text-center py-10 text-gray-500">
-          Brak ulubionych produktów.
-        </div>
-      )}
-
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
         {currentProducts.map((product: any) => (
           <Link
@@ -107,7 +221,7 @@ export function ProductGrid({
               id: String(product.id),
             }}
             search={{
-              page,
+              page: currentPage,
               category,
               search,
             }}
@@ -122,12 +236,37 @@ export function ProductGrid({
             >
               <Heart
                 className={`w-5 h-5 transition ${
-                  isFavorite(product.id)
+                  favorites.includes(product.id)
                     ? "fill-red-500 text-red-500"
                     : "text-gray-500"
                 }`}
               />
             </button>
+
+            <div className="absolute top-14 right-3 z-10">
+  <button
+    type="button"
+    onClick={(e) =>
+      handleAddToCart(e, product)
+    }
+    disabled={addedProducts.includes(
+      product.id
+    )}
+    className={`rounded-full p-2 shadow transition relative ${
+      addedProducts.includes(product.id)
+        ? "bg-green-500 text-white"
+        : "bg-white/90 text-gray-500 hover:scale-110"
+    }`}
+  >
+    <Plus className="w-5 h-5" />
+  </button>
+
+  {addedProducts.includes(product.id) && (
+    <div className="absolute right-12 top-1/2 -translate-y-1/2 bg-black text-white text-xs px-2 py-1 rounded whitespace-nowrap">
+      Added to cart
+    </div>
+  )}
+</div>
 
             <div className="aspect-square bg-gray-100 overflow-hidden">
               <img
@@ -150,63 +289,54 @@ export function ProductGrid({
         ))}
       </div>
 
-      {totalPages > 1 && (
-        <div className="flex justify-center items-center gap-2 mt-12">
-          <Link
-            search={(prev) => ({
-              ...prev,
-              page: page - 1,
-              category,
-              search,
-            })}
-            className={`px-4 py-2 border rounded-lg ${
-              page === 1
-                ? "pointer-events-none opacity-50"
-                : ""
-            }`}
-          >
-            Previous
-          </Link>
+      {data && totalPages > 1 && (
+  <div className="flex justify-center items-center gap-2 mt-12">
+    <button
+      type="button"
+      onClick={() =>
+        changePage(currentPage - 1)
+      }
+      disabled={currentPage === 1}
+      className="px-4 py-2 border rounded-lg disabled:opacity-50"
+    >
+      Previous
+    </button>
 
-          {Array.from(
-            { length: totalPages },
-            (_, index) => (
-              <Link
-                key={index}
-                search={(prev) => ({
-                  ...prev,
-                  page: index + 1,
-                  category,
-                  search,
-                })}
-                className={`px-4 py-2 rounded-lg border ${
-                  page === index + 1
-                    ? "bg-black text-white"
-                    : ""
-                }`}
-              >
-                {index + 1}
-              </Link>
-            )
-          )}
+    {Array.from(
+      { length: totalPages },
+      (_, index) => (
+        <button
+          type="button"
+          key={index}
+          onClick={() =>
+            changePage(index + 1)
+          }
+          className={`px-4 py-2 rounded-lg border ${
+            currentPage === index + 1
+              ? "bg-black text-white"
+              : ""
+          }`}
+        >
+          {index + 1}
+        </button>
+      )
+    )}
 
-          <Link
-            search={(prev) => ({
-              ...prev,
-              page: page + 1,
-              category,
-              search,
-            })}
-            className={`px-4 py-2 border rounded-lg ${
-              page === totalPages
-                ? "pointer-events-none opacity-50"
-                : ""
-            }`}
-          >
-            Next
-          </Link>
-        </div>
-      )}
-    </div>
-  );
+    <button
+      type="button"
+      onClick={() =>
+        changePage(currentPage + 1)
+      }
+      disabled={
+        currentPage === totalPages
+      }
+      className="px-4 py-2 border rounded-lg disabled:opacity-50"
+    >
+      Next
+    </button>
+  </div>
+)}
+</div>
+  )
 }
+

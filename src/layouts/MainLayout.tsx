@@ -8,10 +8,7 @@ import { AppSidebar } from "../components/sidebar/AppSideBar";
         state.location.pathname,
     });
   
-    const isProductPage =
-      pathname.startsWith(
-        "/product/"
-      );
+    const isProductPage = pathname.startsWith("/product/");
 
     const isMyCartPage = pathname.startsWith("/mycart");  
   
