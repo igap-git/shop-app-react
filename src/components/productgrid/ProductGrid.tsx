@@ -191,102 +191,120 @@ const totalPages = Math.ceil(
 
   return (
     <div>
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-        {currentProducts.map((product: Product) => (
-          <Link
-            key={product.id}
-            to="/product/$id"
-            params={{ id: String(product.id) }}
-            search={{
-              page: currentPage,
-              category,
-              search,
-            }}
-            className="group bg-white border rounded-2xl overflow-hidden hover:shadow-lg transition block cursor-pointer relative"
-          >
-
-            <button
-              type="button"
-              onClick={(e) => toggleFavorite(e, product)}
-              className="absolute top-3 right-3 z-10 bg-white/90 rounded-full p-2 shadow hover:scale-110 transition"
-            >
-              <Heart
-                className={`w-5 h-5 transition ${
-                  favorites.some((f) => f.id === product.id)
-                    ? "fill-red-500 text-red-500"
-                    : "text-gray-500"
-                }`}
-              />
-            </button>
-
-
-            <div className="absolute top-14 right-3 z-10">
+      {favoritesOnly && currentProducts.length === 0 ? (
+        <div className="flex flex-col items-center justify-center py-20 text-center">
+          <Heart className="w-14 h-14 text-gray-300 mb-4" />
+  
+          <h2 className="text-2xl font-semibold text-gray-800">
+            No favorite products yet
+          </h2>
+  
+          <p className="text-gray-500 mt-2">
+            Add products to favorites to see them here.
+          </p>
+        </div>
+      ) : (
+        <>
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            {currentProducts.map((product: Product) => (
+              <Link
+                key={product.id}
+                to="/product/$id"
+                params={{ id: String(product.id) }}
+                search={{
+                  page: currentPage,
+                  category,
+                  search,
+                }}
+                className="group bg-white border rounded-2xl overflow-hidden hover:shadow-lg transition block cursor-pointer relative"
+              >
+                <button
+                  type="button"
+                  onClick={(e) => toggleFavorite(e, product)}
+                  className="absolute top-3 right-3 z-10 bg-white/90 rounded-full p-2 shadow hover:scale-110 transition"
+                >
+                  <Heart
+                    className={`w-5 h-5 transition ${
+                      favorites.some((f) => f.id === product.id)
+                        ? "fill-red-500 text-red-500"
+                        : "text-gray-500"
+                    }`}
+                  />
+                </button>
+  
+                <div className="absolute top-14 right-3 z-10">
+                  <button
+                    type="button"
+                    onClick={(e) => handleAddToCart(e, product)}
+                    disabled={addedProducts.includes(product.id)}
+                    className={`rounded-full p-2 shadow transition relative ${
+                      addedProducts.includes(product.id)
+                        ? "bg-green-500 text-white"
+                        : "bg-white/90 text-gray-500 hover:scale-110"
+                    }`}
+                  >
+                    <Plus className="w-5 h-5" />
+                  </button>
+                </div>
+  
+                <div className="aspect-square bg-gray-100 overflow-hidden">
+                  <img
+                    src={product.thumbnail}
+                    alt={product.title}
+                    className="w-full h-full object-cover group-hover:scale-105 transition duration-300"
+                  />
+                </div>
+  
+                <div className="p-4">
+                  <h3 className="text-sm font-medium text-gray-800 line-clamp-2 min-h-[40px]">
+                    {product.title}
+                  </h3>
+  
+                  <p className="mt-3 text-lg font-semibold">
+                    ${product.price}
+                  </p>
+                </div>
+              </Link>
+            ))}
+          </div>
+  
+          {data && totalPages > 1 && (
+            <div className="flex justify-center items-center gap-2 mt-12">
               <button
                 type="button"
-                onClick={(e) => handleAddToCart(e, product)}
-                disabled={addedProducts.includes(product.id)}
-                className={`rounded-full p-2 shadow transition relative ${
-                  addedProducts.includes(product.id)
-                    ? "bg-green-500 text-white"
-                    : "bg-white/90 text-gray-500 hover:scale-110"
-                }`}
+                onClick={() => changePage(currentPage - 1)}
+                disabled={currentPage === 1}
+                className="px-4 py-2 border rounded-lg disabled:opacity-50"
               >
-                <Plus className="w-5 h-5" />
+                Previous
+              </button>
+  
+              {Array.from({ length: totalPages }, (_, index) => (
+                <button
+                  type="button"
+                  key={index}
+                  onClick={() => changePage(index + 1)}
+                  className={`px-4 py-2 rounded-lg border ${
+                    currentPage === index + 1
+                      ? "bg-black text-white"
+                      : ""
+                  }`}
+                >
+                  {index + 1}
+                </button>
+              ))}
+  
+              <button
+                type="button"
+                onClick={() => changePage(currentPage + 1)}
+                disabled={currentPage === totalPages}
+                className="px-4 py-2 border rounded-lg disabled:opacity-50"
+              >
+                Next
               </button>
             </div>
-
-            <div className="aspect-square bg-gray-100 overflow-hidden">
-              <img
-                src={product.thumbnail}
-                alt={product.title}
-                className="w-full h-full object-cover group-hover:scale-105 transition duration-300"
-              />
-            </div>
-
-            <div className="p-4">
-              <h3 className="text-sm font-medium text-gray-800 line-clamp-2 min-h-[40px]">
-                {product.title}
-              </h3>
-              <p className="mt-3 text-lg font-semibold">${product.price}</p>
-            </div>
-          </Link>
-        ))}
-      </div>
-
-
-      {data && totalPages > 1 && (
-        <div className="flex justify-center items-center gap-2 mt-12">
-          <button
-            type="button"
-            onClick={() => changePage(currentPage - 1)}
-            disabled={currentPage === 1}
-            className="px-4 py-2 border rounded-lg disabled:opacity-50"
-          >
-            Previous
-          </button>
-
-          {Array.from({ length: totalPages }, (_, index) => (
-            <button
-              type="button"
-              key={index}
-              onClick={() => changePage(index + 1)}
-              className={`px-4 py-2 rounded-lg border ${
-                currentPage === index + 1 ? "bg-black text-white" : ""
-              }`}
-            >
-              {index + 1}
-            </button>
-          ))}
-
-          <button
-            type="button"
-            onClick={() => changePage(currentPage + 1)}
-            disabled={currentPage === totalPages}
-            className="px-4 py-2 border rounded-lg disabled:opacity-50"
-          >
-            Next
-          </button>
-        </div>
+          )}
+        </>
       )}
     </div>
   );
