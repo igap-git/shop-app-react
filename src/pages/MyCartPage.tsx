@@ -4,7 +4,7 @@ import { ArrowLeft } from "lucide-react";
 
 export default function MyCartPage() {
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center p-6">
+      <div className="flex flex-col items-center justify-center p-6">
         <div className="w-full max-w-4xl">
           <Link
             to="/home"

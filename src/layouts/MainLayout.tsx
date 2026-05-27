@@ -14,7 +14,7 @@ export default function MainLayout() {
       pathname === "/register" || pathname === "/login";
   
     return (
-      <div className="flex flex-col min-h-screen">
+      <div className="flex flex-col">
         {isAuthPage ? <AppAuthNavbar /> : <AppNavbar />}
   
         <div className="flex flex-1">
