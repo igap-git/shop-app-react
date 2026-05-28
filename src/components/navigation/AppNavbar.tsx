@@ -1,6 +1,5 @@
 import { useRouter } from '@tanstack/react-router';
 import { Navbar, NavbarDivider, NavbarItem, NavbarSection } from './NavBar';
-
 import logo from '../../assets/shop-logo.png';
 
 export function AppNavbar() {
@@ -27,11 +26,11 @@ export function AppNavbar() {
         <NavbarDivider />
 
         <button
-  onClick={handleLogout}
-  className="px-3 py-1 text-sm font-medium text-red-600 border border-red-200 rounded-md hover:bg-red-50 transition"
->
-  Logout
-</button>
+          onClick={handleLogout}
+          className="px-3 py-1 text-sm font-medium text-red-600 border border-red-200 rounded-md hover:bg-red-50 transition"
+        >
+          Logout
+        </button>
       </NavbarSection>
     </Navbar>
   );

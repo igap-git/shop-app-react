@@ -1,23 +1,19 @@
 import { useRouter } from '@tanstack/react-router';
-import AuthForm from "./AuthForm";
+import AuthForm from './AuthForm';
 import type { User } from '../../types/user';
 
 export function AppLoginForm() {
   const router = useRouter();
 
   const handleSubmit = (data: { email: string; password: string }) => {
-    const users: User[] = JSON.parse(
-      localStorage.getItem("users") || "[]"
-    );
+    const users: User[] = JSON.parse(localStorage.getItem('users') || '[]');
 
     const foundUser = users.find(
-      (user) =>
-        user.email === data.email &&
-        user.password === data.password
+      (user) => user.email === data.email && user.password === data.password
     );
 
     if (!foundUser) {
-      alert("Invalid email or password");
+      alert('Invalid email or password');
       return;
     }
 
@@ -28,8 +24,8 @@ export function AppLoginForm() {
       favorites: foundUser.favorites ?? [],
     };
 
-    localStorage.setItem("currentUser", JSON.stringify(loggedUser));
-    router.navigate({ to: "/" });
+    localStorage.setItem('currentUser', JSON.stringify(loggedUser));
+    router.navigate({ to: '/' });
   };
 
   return (

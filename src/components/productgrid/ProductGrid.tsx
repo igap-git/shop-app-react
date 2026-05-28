@@ -7,7 +7,7 @@ import type { Product } from '../../interfaces/product.interface';
 import type { User } from '../../types/user';
 
 const getCurrentUser = (): User | null => {
-  return JSON.parse(localStorage.getItem("currentUser") || "null");
+  return JSON.parse(localStorage.getItem('currentUser') || 'null');
 };
 
 export function ProductGrid({
@@ -39,8 +39,8 @@ export function ProductGrid({
 
     loadFavorites();
 
-    window.addEventListener("focus", loadFavorites);
-    return () => window.removeEventListener("focus", loadFavorites);
+    window.addEventListener('focus', loadFavorites);
+    return () => window.removeEventListener('focus', loadFavorites);
   }, []);
 
   const toggleFavorite = (e: React.MouseEvent, product: Product) => {
@@ -61,31 +61,26 @@ export function ProductGrid({
       favorites: updatedFavorites,
     };
 
-    localStorage.setItem("currentUser", JSON.stringify(updatedUser));
+    localStorage.setItem('currentUser', JSON.stringify(updatedUser));
 
-    const users: User[] = JSON.parse(localStorage.getItem("users") || "[]");
+    const users: User[] = JSON.parse(localStorage.getItem('users') || '[]');
 
-    const updatedUsers = users.map((u) =>
-      u.id === user.id ? updatedUser : u
-    );
+    const updatedUsers = users.map((u) => (u.id === user.id ? updatedUser : u));
 
-    localStorage.setItem("users", JSON.stringify(updatedUsers));
+    localStorage.setItem('users', JSON.stringify(updatedUsers));
 
     setFavorites(updatedFavorites);
   };
 
-  const handleAddToCart = (
-    e: React.MouseEvent,
-    product: Product
-  ) => {
+  const handleAddToCart = (e: React.MouseEvent, product: Product) => {
     e.preventDefault();
     e.stopPropagation();
-  
+
     const user = getCurrentUser();
     if (!user) return;
-  
+
     const cart: CartItem[] = user.cart ?? [];
-  
+
     const productToAdd: CartItem = {
       id: product.id,
       title: product.title,
@@ -93,11 +88,9 @@ export function ProductGrid({
       thumbnail: product.thumbnail,
       quantity: 1,
     };
-  
-    const isInCart = cart.some(
-      (item) => item.id === product.id
-    );
-  
+
+    const isInCart = cart.some((item) => item.id === product.id);
+
     const updatedCart = isInCart
       ? cart.map((item) =>
           item.id === product.id
@@ -108,39 +101,24 @@ export function ProductGrid({
             : item
         )
       : [...cart, productToAdd];
-  
+
     const updatedUser: User = {
       ...user,
       cart: updatedCart,
     };
-  
-    localStorage.setItem(
-      "currentUser",
-      JSON.stringify(updatedUser)
-    );
-  
-    const users: User[] = JSON.parse(
-      localStorage.getItem("users") || "[]"
-    );
-  
-    const updatedUsers = users.map((u) =>
-      u.id === user.id ? updatedUser : u
-    );
-  
-    localStorage.setItem(
-      "users",
-      JSON.stringify(updatedUsers)
-    );
-  
-    setAddedProducts((prev) => [
-      ...prev,
-      product.id,
-    ]);
-  
+
+    localStorage.setItem('currentUser', JSON.stringify(updatedUser));
+
+    const users: User[] = JSON.parse(localStorage.getItem('users') || '[]');
+
+    const updatedUsers = users.map((u) => (u.id === user.id ? updatedUser : u));
+
+    localStorage.setItem('users', JSON.stringify(updatedUsers));
+
+    setAddedProducts((prev) => [...prev, product.id]);
+
     setTimeout(() => {
-      setAddedProducts((prev) =>
-        prev.filter((id) => id !== product.id)
-      );
+      setAddedProducts((prev) => prev.filter((id) => id !== product.id));
     }, 1500);
   };
 
@@ -151,13 +129,9 @@ export function ProductGrid({
 
   const user = getCurrentUser();
 
-  const products = favoritesOnly
-  ? user?.favorites ?? []
-  : allProducts;
+  const products = favoritesOnly ? (user?.favorites ?? []) : allProducts;
 
-const totalPages = Math.ceil(
-  products.length / productsPerPage
-);
+  const totalPages = Math.ceil(products.length / productsPerPage);
 
   const startIndex = (currentPage - 1) * productsPerPage;
 
@@ -168,7 +142,7 @@ const totalPages = Math.ceil(
 
   const changePage = (newPage: number) => {
     navigate({
-      to: favoritesOnly ? "/favorites" : "/home",
+      to: favoritesOnly ? '/favorites' : '/home',
       search: {
         page: newPage,
         category,
@@ -194,11 +168,11 @@ const totalPages = Math.ceil(
       {favoritesOnly && currentProducts.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-20 text-center">
           <Heart className="w-14 h-14 text-gray-300 mb-4" />
-  
+
           <h2 className="text-2xl font-semibold text-gray-800">
             No favorite products yet
           </h2>
-  
+
           <p className="text-gray-500 mt-2">
             Add products to favorites to see them here.
           </p>
@@ -226,12 +200,12 @@ const totalPages = Math.ceil(
                   <Heart
                     className={`w-5 h-5 transition ${
                       favorites.some((f) => f.id === product.id)
-                        ? "fill-red-500 text-red-500"
-                        : "text-gray-500"
+                        ? 'fill-red-500 text-red-500'
+                        : 'text-gray-500'
                     }`}
                   />
                 </button>
-  
+
                 <div className="absolute top-14 right-3 z-10">
                   <button
                     type="button"
@@ -239,14 +213,14 @@ const totalPages = Math.ceil(
                     disabled={addedProducts.includes(product.id)}
                     className={`rounded-full p-2 shadow transition relative ${
                       addedProducts.includes(product.id)
-                        ? "bg-green-500 text-white"
-                        : "bg-white/90 text-gray-500 hover:scale-110"
+                        ? 'bg-green-500 text-white'
+                        : 'bg-white/90 text-gray-500 hover:scale-110'
                     }`}
                   >
                     <Plus className="w-5 h-5" />
                   </button>
                 </div>
-  
+
                 <div className="aspect-square bg-gray-100 overflow-hidden">
                   <img
                     src={product.thumbnail}
@@ -254,20 +228,18 @@ const totalPages = Math.ceil(
                     className="w-full h-full object-cover group-hover:scale-105 transition duration-300"
                   />
                 </div>
-  
+
                 <div className="p-4">
                   <h3 className="text-sm font-medium text-gray-800 line-clamp-2 min-h-[40px]">
                     {product.title}
                   </h3>
-  
-                  <p className="mt-3 text-lg font-semibold">
-                    ${product.price}
-                  </p>
+
+                  <p className="mt-3 text-lg font-semibold">${product.price}</p>
                 </div>
               </Link>
             ))}
           </div>
-  
+
           {data && totalPages > 1 && (
             <div className="flex justify-center items-center gap-2 mt-12">
               <button
@@ -278,22 +250,20 @@ const totalPages = Math.ceil(
               >
                 Previous
               </button>
-  
+
               {Array.from({ length: totalPages }, (_, index) => (
                 <button
                   type="button"
                   key={index}
                   onClick={() => changePage(index + 1)}
                   className={`px-4 py-2 rounded-lg border ${
-                    currentPage === index + 1
-                      ? "bg-black text-white"
-                      : ""
+                    currentPage === index + 1 ? 'bg-black text-white' : ''
                   }`}
                 >
                   {index + 1}
                 </button>
               ))}
-  
+
               <button
                 type="button"
                 onClick={() => changePage(currentPage + 1)}

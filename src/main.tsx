@@ -18,7 +18,7 @@ declare module "@tanstack/react-router"{
     router: typeof router
   }
 }
-// ❗ singleton
+
 const queryClient = new QueryClient();
 
 createRoot(document.getElementById("root")!).render(

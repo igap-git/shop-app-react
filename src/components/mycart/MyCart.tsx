@@ -1,45 +1,30 @@
-import { Link } from '@tanstack/react-router';
 import { Trash2 } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import type { CartItem } from '../../interfaces/cartitem.interface';
 import type { User } from '../../types/user';
 
 const getCurrentUser = (): User | null => {
-  return JSON.parse(
-    localStorage.getItem("currentUser") || "null"
-  );
+  return JSON.parse(localStorage.getItem('currentUser') || 'null');
 };
 
-const saveCartInCurrentUser = (
-    updatedCart: CartItem[]
-  ) => {
-    const user = getCurrentUser();
-  
-    if (!user) return;
-  
-    const updatedUser: User = {
-      ...user,
-      cart: updatedCart,
-    };
-  
-    localStorage.setItem(
-      "currentUser",
-      JSON.stringify(updatedUser)
-    );
-  
-    const users: User[] = JSON.parse(
-      localStorage.getItem("users") || "[]"
-    );
-  
-    const updatedUsers = users.map((u) =>
-      u.id === user.id ? updatedUser : u
-    );
-  
-    localStorage.setItem(
-      "users",
-      JSON.stringify(updatedUsers)
-    );
+const saveCartInCurrentUser = (updatedCart: CartItem[]) => {
+  const user = getCurrentUser();
+
+  if (!user) return;
+
+  const updatedUser: User = {
+    ...user,
+    cart: updatedCart,
   };
+
+  localStorage.setItem('currentUser', JSON.stringify(updatedUser));
+
+  const users: User[] = JSON.parse(localStorage.getItem('users') || '[]');
+
+  const updatedUsers = users.map((u) => (u.id === user.id ? updatedUser : u));
+
+  localStorage.setItem('users', JSON.stringify(updatedUsers));
+};
 
 export const MyCart = () => {
   const [cart, setCart] = useState<CartItem[]>([]);
@@ -51,9 +36,7 @@ export const MyCart = () => {
   }, []);
 
   const removeFromCart = (id: number) => {
-    const updatedCart = cart.filter(
-      (product) => product.id !== id
-    );
+    const updatedCart = cart.filter((product) => product.id !== id);
 
     setCart(updatedCart);
 
@@ -93,39 +76,26 @@ export const MyCart = () => {
   };
 
   const totalPrice = cart.reduce(
-    (sum, product) =>
-      sum +
-      product.price *
-        (product.quantity ?? 1),
+    (sum, product) => sum + product.price * (product.quantity ?? 1),
     0
   );
 
   if (cart.length === 0) {
     return (
       <div className="max-w-5xl mx-auto py-12 text-center">
-        <h1 className="text-3xl font-semibold mb-4">
-          Your cart is empty
-        </h1>
+        <h1 className="text-3xl font-semibold mb-4">Your cart is empty</h1>
 
         <p className="text-gray-500 mb-8">
           Add some products to see them here.
         </p>
 
-        <Link
-          to="/home"
-          className="inline-block bg-black text-white px-6 py-3 rounded-xl hover:opacity-90 transition"
-        >
-          Back to shop
-        </Link>
       </div>
     );
   }
 
   return (
     <div className="max-w-5xl mx-auto py-8">
-      <h1 className="text-3xl font-semibold mb-8">
-        My cart
-      </h1>
+      <h1 className="text-3xl font-semibold mb-8">My cart</h1>
 
       <div className="space-y-4">
         {cart.map((product) => (
@@ -140,34 +110,24 @@ export const MyCart = () => {
             />
 
             <div className="flex-1">
-              <h2 className="font-medium text-gray-800">
-                {product.title}
-              </h2>
+              <h2 className="font-medium text-gray-800">{product.title}</h2>
 
-              <p className="font-semibold mt-2">
-                ${product.price}
-              </p>
+              <p className="font-semibold mt-2">${product.price}</p>
             </div>
 
             <button
               type="button"
-              onClick={() =>
-                decreaseQuantity(product.id)
-              }
+              onClick={() => decreaseQuantity(product.id)}
               className="w-10 h-10 rounded-full border hover:bg-gray-100"
             >
               -
             </button>
 
-            <p className="text-gray-500 mt-1">
-              {product.quantity ?? 1}
-            </p>
+            <p className="text-gray-500 mt-1">{product.quantity ?? 1}</p>
 
             <button
               type="button"
-              onClick={() =>
-                increaseQuantity(product.id)
-              }
+              onClick={() => increaseQuantity(product.id)}
               className="w-10 h-10 rounded-full border hover:bg-gray-100"
             >
               +
@@ -175,9 +135,7 @@ export const MyCart = () => {
 
             <button
               type="button"
-              onClick={() =>
-                removeFromCart(product.id)
-              }
+              onClick={() => removeFromCart(product.id)}
               className="p-3 rounded-full border hover:bg-red-50 hover:text-red-600 transition"
             >
               <Trash2 size={20} />
@@ -187,10 +145,7 @@ export const MyCart = () => {
       </div>
 
       <div className="mt-8 border-t pt-6 flex justify-between items-center">
-        <p className="text-xl font-semibold">
-          Total: $
-          {totalPrice.toFixed(2)}
-        </p>
+        <p className="text-xl font-semibold">Total: ${totalPrice.toFixed(2)}</p>
 
         <button className="bg-black text-white px-6 py-3 rounded-xl hover:opacity-90 transition">
           Checkout

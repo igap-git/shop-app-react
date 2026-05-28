@@ -1,5 +1,5 @@
-import { useSearch } from "@tanstack/react-router";
-import { ProductGrid } from "./ProductGrid";
+import { useSearch } from '@tanstack/react-router';
+import { ProductGrid } from './ProductGrid';
 
 export function AppProductGrid({
   favoritesOnly = false,
@@ -19,9 +19,7 @@ export function AppProductGrid({
       <ProductGrid
         search={searchParams.search}
         category={searchParams.category}
-        page={Number(
-          searchParams.page ?? 1
-        )}
+        page={Number(searchParams.page ?? 1)}
         favoritesOnly={favoritesOnly}
       />
     </section>
