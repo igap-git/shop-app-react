@@ -2,7 +2,7 @@ export const fetchProducts = async (
   category?: string,
   search?: string
 ): Promise<{ products: any[] }> => {
-  let url = 'https://dummyjson.com/products';
+  let url = 'https://dummyjson.com/products?limit=0';
 
   if (search) {
     url = `https://dummyjson.com/products/search?q=${search}&limit=0`;

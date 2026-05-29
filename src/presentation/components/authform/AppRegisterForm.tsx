@@ -4,7 +4,13 @@ import { useRouter } from '@tanstack/react-router';
 
 export function AppRegisterForm() {
   const router = useRouter();
-  const handleSubmit = async (data: { email: string; password: string }) => {
+  const handleSubmit = async (
+    data: {
+      email: string;
+      password: string;
+      isAdmin: boolean;
+    }
+  ) => {
     try {
       const response = await fetch('https://dummyjson.com/http/200', {
         method: 'POST',
@@ -30,6 +36,9 @@ export function AppRegisterForm() {
 
       const newUser: User = {
         id: crypto.randomUUID(),
+        role: data.isAdmin
+        ? "ADMIN"
+        : "USER",
         email: data.email,
         password: data.password,
         cart: [],

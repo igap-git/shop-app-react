@@ -1,8 +1,19 @@
-import type { User } from '../../domain/types/user';
+import type { User, UserRole } from '../../domain/types/user';
 import type { Product } from '../../domain/interfaces/product.interface';
 
 export const getCurrentUser = (): User | null => {
   return JSON.parse(localStorage.getItem('currentUser') || 'null');
+};
+
+export const getCurrentUserRole = (): UserRole | null => {
+  const savedUser = localStorage.getItem('currentUser');
+
+  if (!savedUser) {
+    return null;
+  }
+
+  const currentUser = JSON.parse(savedUser);
+  return currentUser.role ?? null;
 };
 
 export const getUsers = (): User[] => {
@@ -34,7 +45,5 @@ export const updateUser = (updatedUser: User) => {
 };
 
 export const logoutUser = () => {
-    localStorage.removeItem(
-      "currentUser"
-    );
-  };
+  localStorage.removeItem('currentUser');
+};
