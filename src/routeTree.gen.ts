@@ -8,16 +8,16 @@
 // You should NOT make any changes in this file as it will be overwritten.
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
-import { Route as rootRouteImport } from './routes/__root'
-import { Route as RegisterRouteImport } from './routes/register'
-import { Route as ProfileRouteImport } from './routes/profile'
-import { Route as MycartRouteImport } from './routes/mycart'
-import { Route as LoginRouteImport } from './routes/login'
-import { Route as HomeRouteImport } from './routes/home'
-import { Route as FavoritesRouteImport } from './routes/favorites'
-import { Route as IndexRouteImport } from './routes/index'
-import { Route as ProductIdRouteImport } from './routes/product.$id'
-import { Route as CategoryCategoryRouteImport } from './routes/category.$category'
+import { Route as rootRouteImport } from './app/routes/__root'
+import { Route as RegisterRouteImport } from './app/routes/register'
+import { Route as ProfileRouteImport } from './app/routes/profile'
+import { Route as MycartRouteImport } from './app/routes/mycart'
+import { Route as LoginRouteImport } from './app/routes/login'
+import { Route as HomeRouteImport } from './app/routes/home'
+import { Route as FavoritesRouteImport } from './app/routes/favorites'
+import { Route as IndexRouteImport } from './app/routes/index'
+import { Route as ProductIdRouteImport } from './app/routes/product.$id'
+import { Route as CategoryCategoryRouteImport } from './app/routes/category.$category'
 
 const RegisterRoute = RegisterRouteImport.update({
   id: '/register',
