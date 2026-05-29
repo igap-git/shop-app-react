@@ -42,7 +42,7 @@ export function AppNavbar() {
           <>
             <NavbarDivider />
 
-            <NavbarItem to="/statistics">
+            <NavbarItem to="/statistics/overview">
               Statistics
             </NavbarItem>
           </>

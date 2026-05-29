@@ -6,18 +6,87 @@ import {
   SidebarLabel,
   SidebarSearch,
   SidebarSection,
+  SidebarDropdown,
+  SidebarDropdownItem,
 } from './SideBar';
 
 import {
+  ArrowLeftIcon,
   HomeIcon,
   HeartIcon,
   MagnifyingGlassIcon,
 } from '@heroicons/react/24/solid';
 
+import { useRouterState } from '@tanstack/react-router';
 import { useCategories } from '../../hooks/useCategories';
 
 export function AppSidebar() {
   const { data: categories, isLoading } = useCategories();
+
+  const pathname = useRouterState({
+    select: (state) => state.location.pathname,
+  });
+
+  const isStatisticsPage = pathname.startsWith("/statistics")
+
+  if (isStatisticsPage) {
+    return (
+      <Sidebar>
+        <SidebarHeader>
+          <SidebarSection>
+            <SidebarItem to="/home">
+              <ArrowLeftIcon className="w-5 h-5" />
+              <SidebarLabel>Back to shop</SidebarLabel>
+            </SidebarItem>
+          </SidebarSection>
+        </SidebarHeader>
+  
+        <SidebarBody>
+          <SidebarSection>
+          <SidebarItem to="/statistics/overview">
+              <SidebarLabel>Overview</SidebarLabel>
+            </SidebarItem>
+
+
+            <SidebarDropdown title="Products statistics">
+              <SidebarDropdownItem to="/statistics/topProducts">
+                <SidebarLabel>Top products</SidebarLabel>
+              </SidebarDropdownItem>
+  
+              <SidebarDropdownItem to="/statistics/productsByCategory">
+                <SidebarLabel>Products by category</SidebarLabel>
+              </SidebarDropdownItem>
+            </SidebarDropdown>
+  
+            <SidebarDropdown title="Stock statistics">
+              <SidebarDropdownItem to="/statistics/stockByCategory">
+                <SidebarLabel>Stock by category</SidebarLabel>
+              </SidebarDropdownItem>
+  
+              <SidebarDropdownItem to="/statistics/lowInStock">
+                <SidebarLabel>Low stock products</SidebarLabel>
+              </SidebarDropdownItem>
+            </SidebarDropdown>
+  
+            <SidebarDropdown title="Income statistics">
+              <SidebarDropdownItem to="/statistics/averagePriceByCategory">
+                <SidebarLabel>Average price</SidebarLabel>
+              </SidebarDropdownItem>
+  
+            </SidebarDropdown>
+  
+            <SidebarDropdown title="Users statistics">
+              <SidebarDropdownItem to="/statistics/totalReview">
+                <SidebarLabel>Total reviews</SidebarLabel>
+              </SidebarDropdownItem>
+  
+    
+            </SidebarDropdown>
+          </SidebarSection>
+        </SidebarBody>
+      </Sidebar>
+    );
+  }
 
   return (
     <Sidebar>

@@ -1,6 +1,10 @@
 import type { ReactNode } from "react";
 import { useState } from "react";
 import { Link, useNavigate } from "@tanstack/react-router";
+import {
+  ChevronDownIcon,
+  ChevronRightIcon,
+} from "@heroicons/react/24/solid";
 
 export const Sidebar = ({
   children,
@@ -160,5 +164,87 @@ export const SidebarLabel = ({
     <span className="text-sm font-medium">
       {children}
     </span>
+  );
+};
+
+export const SidebarDropdown = ({
+  title,
+  children,
+}: {
+  title: string;
+  children: ReactNode;
+}) => {
+  const [isOpen, setIsOpen] =
+    useState(false);
+
+  return (
+    <div className="flex flex-col">
+      <button
+        type="button"
+        onClick={() =>
+          setIsOpen((prev) => !prev)
+        }
+        className="
+          w-full
+          flex items-center
+          justify-between
+          px-3 py-2
+          rounded-lg
+          text-gray-700
+          hover:bg-gray-100
+          transition
+        "
+      >
+        <SidebarLabel >
+          {title}
+        </SidebarLabel>
+
+        {isOpen ? (
+          <ChevronDownIcon className="w-4 h-4" />
+        ) : (
+          <ChevronRightIcon className="w-4 h-4" />
+        )}
+      </button>
+
+      {isOpen && (
+        <div className="ml-4 mt-3 flex flex-col gap-2">
+          {children}
+        </div>
+      )}
+    </div>
+  );
+};
+
+export const SidebarDropdownItem = ({
+  children,
+  to,
+
+}: {
+  children: ReactNode;
+  to: string;
+}) => {
+  return (
+    <Link
+      to={to}
+      activeOptions={{
+        exact: true,
+      }}
+      className="
+        w-full
+        flex items-center gap-3
+        px-3 py-2
+        rounded-lg
+        text-sm text-gray-600
+        transition
+        hover:bg-gray-100
+        hover:text-black
+      "
+      activeProps={{
+        className:
+          "bg-gray-100 text-black font-semibold",
+      }}
+    >
+      {children}
+    </Link>
   );
 };

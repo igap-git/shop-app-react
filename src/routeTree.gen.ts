@@ -16,6 +16,7 @@ import { Route as LoginRouteImport } from './app/routes/login'
 import { Route as HomeRouteImport } from './app/routes/home'
 import { Route as FavoritesRouteImport } from './app/routes/favorites'
 import { Route as IndexRouteImport } from './app/routes/index'
+import { Route as StatisticsSectionRouteImport } from './app/routes/statistics.$section'
 import { Route as ProductIdRouteImport } from './app/routes/product.$id'
 import { Route as CategoryCategoryRouteImport } from './app/routes/category.$category'
 
@@ -54,6 +55,11 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const StatisticsSectionRoute = StatisticsSectionRouteImport.update({
+  id: '/statistics/$section',
+  path: '/statistics/$section',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ProductIdRoute = ProductIdRouteImport.update({
   id: '/product/$id',
   path: '/product/$id',
@@ -75,6 +81,7 @@ export interface FileRoutesByFullPath {
   '/register': typeof RegisterRoute
   '/category/$category': typeof CategoryCategoryRoute
   '/product/$id': typeof ProductIdRoute
+  '/statistics/$section': typeof StatisticsSectionRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -86,6 +93,7 @@ export interface FileRoutesByTo {
   '/register': typeof RegisterRoute
   '/category/$category': typeof CategoryCategoryRoute
   '/product/$id': typeof ProductIdRoute
+  '/statistics/$section': typeof StatisticsSectionRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -98,6 +106,7 @@ export interface FileRoutesById {
   '/register': typeof RegisterRoute
   '/category/$category': typeof CategoryCategoryRoute
   '/product/$id': typeof ProductIdRoute
+  '/statistics/$section': typeof StatisticsSectionRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -111,6 +120,7 @@ export interface FileRouteTypes {
     | '/register'
     | '/category/$category'
     | '/product/$id'
+    | '/statistics/$section'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -122,6 +132,7 @@ export interface FileRouteTypes {
     | '/register'
     | '/category/$category'
     | '/product/$id'
+    | '/statistics/$section'
   id:
     | '__root__'
     | '/'
@@ -133,6 +144,7 @@ export interface FileRouteTypes {
     | '/register'
     | '/category/$category'
     | '/product/$id'
+    | '/statistics/$section'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -145,6 +157,7 @@ export interface RootRouteChildren {
   RegisterRoute: typeof RegisterRoute
   CategoryCategoryRoute: typeof CategoryCategoryRoute
   ProductIdRoute: typeof ProductIdRoute
+  StatisticsSectionRoute: typeof StatisticsSectionRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -198,6 +211,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/statistics/$section': {
+      id: '/statistics/$section'
+      path: '/statistics/$section'
+      fullPath: '/statistics/$section'
+      preLoaderRoute: typeof StatisticsSectionRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/product/$id': {
       id: '/product/$id'
       path: '/product/$id'
@@ -225,6 +245,7 @@ const rootRouteChildren: RootRouteChildren = {
   RegisterRoute: RegisterRoute,
   CategoryCategoryRoute: CategoryCategoryRoute,
   ProductIdRoute: ProductIdRoute,
+  StatisticsSectionRoute: StatisticsSectionRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
