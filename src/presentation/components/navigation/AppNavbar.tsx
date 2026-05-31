@@ -32,11 +32,11 @@ export function AppNavbar() {
           My Cart
         </NavbarItem>
 
-        <NavbarDivider />
+        
 
         {role === "ADMIN" && (
           <>
-      
+      <NavbarDivider />
             <NavbarItem to="/statistics/overview">
               Statistics
             </NavbarItem>
