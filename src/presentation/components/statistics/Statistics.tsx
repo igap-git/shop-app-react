@@ -2,8 +2,6 @@ import {
   Bar,
   BarChart,
   CartesianGrid,
-  Pie,
-  PieChart,
   ResponsiveContainer,
   Tooltip,
   XAxis,
