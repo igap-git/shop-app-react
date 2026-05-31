@@ -1,16 +1,9 @@
-import type { ReactNode } from "react";
-import { useState } from "react";
-import { Link, useNavigate } from "@tanstack/react-router";
-import {
-  ChevronDownIcon,
-  ChevronRightIcon,
-} from "@heroicons/react/24/solid";
+import type { ReactNode } from 'react';
+import { useState } from 'react';
+import { Link, useNavigate } from '@tanstack/react-router';
+import { ChevronDownIcon, ChevronRightIcon } from '@heroicons/react/24/solid';
 
-export const Sidebar = ({
-  children,
-}: {
-  children: ReactNode;
-}) => {
+export const Sidebar = ({ children }: { children: ReactNode }) => {
   return (
     <aside className="w-72 h-max border-r bg-white flex flex-col">
       {children}
@@ -18,63 +11,33 @@ export const Sidebar = ({
   );
 };
 
-export const SidebarHeader = ({
-  children,
-}: {
-  children: ReactNode;
-}) => {
-  return (
-    <div className="p-4 border-b">
-      {children}
-    </div>
-  );
+export const SidebarHeader = ({ children }: { children: ReactNode }) => {
+  return <div className="p-4 border-b">{children}</div>;
 };
 
-export const SidebarBody = ({
-  children,
-}: {
-  children: ReactNode;
-}) => {
-  return (
-    <div className="flex-1 overflow-y-auto p-4">
-      {children}
-    </div>
-  );
+export const SidebarBody = ({ children }: { children: ReactNode }) => {
+  return <div className="flex-1 overflow-y-auto p-4">{children}</div>;
 };
 
-export const SidebarSection = ({
-  children,
-}: {
-  children: ReactNode;
-}) => {
-  return (
-    <div className="flex flex-col gap-1">
-      {children}
-    </div>
-  );
+export const SidebarSection = ({ children }: { children: ReactNode }) => {
+  return <div className="flex flex-col gap-1">{children}</div>;
 };
 
-export const SidebarSearch = ({
-  icon,
-}: {
-  icon: ReactNode;
-}) => {
+export const SidebarSearch = ({ icon }: { icon: ReactNode }) => {
   const navigate = useNavigate();
 
   const [isOpen, setIsOpen] = useState(false);
-  const [value, setValue] = useState("");
+  const [value, setValue] = useState('');
 
-  const handleSearch = (
-    e: React.KeyboardEvent<HTMLInputElement>
-  ) => {
-    if (e.key !== "Enter") return;
+  const handleSearch = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key !== 'Enter') return;
 
     const searchValue = value.trim();
 
     if (!searchValue) return;
 
     navigate({
-      to: "/home",
+      to: '/home',
       search: {
         search: searchValue,
         page: 1,
@@ -88,9 +51,7 @@ export const SidebarSearch = ({
         <input
           autoFocus
           value={value}
-          onChange={(e) =>
-            setValue(e.target.value)
-          }
+          onChange={(e) => setValue(e.target.value)}
           onKeyDown={handleSearch}
           placeholder="e.g. perfume"
           className="
@@ -147,7 +108,7 @@ export const SidebarItem = ({
       "
       activeProps={{
         className:
-          "bg-gray-100 text-black font-semibold border border-gray-200",
+          'bg-gray-100 text-black font-semibold border border-gray-200',
       }}
     >
       {children}
@@ -155,16 +116,8 @@ export const SidebarItem = ({
   );
 };
 
-export const SidebarLabel = ({
-  children,
-}: {
-  children: ReactNode;
-}) => {
-  return (
-    <span className="text-sm font-medium">
-      {children}
-    </span>
-  );
+export const SidebarLabel = ({ children }: { children: ReactNode }) => {
+  return <span className="text-sm font-medium">{children}</span>;
 };
 
 export const SidebarDropdown = ({
@@ -174,16 +127,13 @@ export const SidebarDropdown = ({
   title: string;
   children: ReactNode;
 }) => {
-  const [isOpen, setIsOpen] =
-    useState(false);
+  const [isOpen, setIsOpen] = useState(false);
 
   return (
     <div className="flex flex-col">
       <button
         type="button"
-        onClick={() =>
-          setIsOpen((prev) => !prev)
-        }
+        onClick={() => setIsOpen((prev) => !prev)}
         className="
           w-full
           flex items-center
@@ -195,9 +145,7 @@ export const SidebarDropdown = ({
           transition
         "
       >
-        <SidebarLabel >
-          {title}
-        </SidebarLabel>
+        <SidebarLabel>{title}</SidebarLabel>
 
         {isOpen ? (
           <ChevronDownIcon className="w-4 h-4" />
@@ -207,9 +155,7 @@ export const SidebarDropdown = ({
       </button>
 
       {isOpen && (
-        <div className="ml-4 mt-3 flex flex-col gap-2">
-          {children}
-        </div>
+        <div className="ml-4 mt-3 flex flex-col gap-2">{children}</div>
       )}
     </div>
   );
@@ -218,7 +164,6 @@ export const SidebarDropdown = ({
 export const SidebarDropdownItem = ({
   children,
   to,
-
 }: {
   children: ReactNode;
   to: string;
@@ -240,8 +185,7 @@ export const SidebarDropdownItem = ({
         hover:text-black
       "
       activeProps={{
-        className:
-          "bg-gray-100 text-black font-semibold",
+        className: 'bg-gray-100 text-black font-semibold',
       }}
     >
       {children}

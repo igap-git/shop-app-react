@@ -34,16 +34,17 @@ export function AppNavbar() {
 
         <NavbarDivider />
 
-        <NavbarItem to="/profile">
-          Profile
-        </NavbarItem>
-
         {role === "ADMIN" && (
           <>
-            <NavbarDivider />
-
+      
             <NavbarItem to="/statistics/overview">
               Statistics
+            </NavbarItem>
+
+            <NavbarDivider />
+
+            <NavbarItem to="/employees">
+              Employees
             </NavbarItem>
           </>
         )}

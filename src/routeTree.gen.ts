@@ -10,11 +10,11 @@
 
 import { Route as rootRouteImport } from './app/routes/__root'
 import { Route as RegisterRouteImport } from './app/routes/register'
-import { Route as ProfileRouteImport } from './app/routes/profile'
 import { Route as MycartRouteImport } from './app/routes/mycart'
 import { Route as LoginRouteImport } from './app/routes/login'
 import { Route as HomeRouteImport } from './app/routes/home'
 import { Route as FavoritesRouteImport } from './app/routes/favorites'
+import { Route as EmployeesRouteImport } from './app/routes/employees'
 import { Route as IndexRouteImport } from './app/routes/index'
 import { Route as StatisticsSectionRouteImport } from './app/routes/statistics.$section'
 import { Route as ProductIdRouteImport } from './app/routes/product.$id'
@@ -23,11 +23,6 @@ import { Route as CategoryCategoryRouteImport } from './app/routes/category.$cat
 const RegisterRoute = RegisterRouteImport.update({
   id: '/register',
   path: '/register',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ProfileRoute = ProfileRouteImport.update({
-  id: '/profile',
-  path: '/profile',
   getParentRoute: () => rootRouteImport,
 } as any)
 const MycartRoute = MycartRouteImport.update({
@@ -48,6 +43,11 @@ const HomeRoute = HomeRouteImport.update({
 const FavoritesRoute = FavoritesRouteImport.update({
   id: '/favorites',
   path: '/favorites',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const EmployeesRoute = EmployeesRouteImport.update({
+  id: '/employees',
+  path: '/employees',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -73,11 +73,11 @@ const CategoryCategoryRoute = CategoryCategoryRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/employees': typeof EmployeesRoute
   '/favorites': typeof FavoritesRoute
   '/home': typeof HomeRoute
   '/login': typeof LoginRoute
   '/mycart': typeof MycartRoute
-  '/profile': typeof ProfileRoute
   '/register': typeof RegisterRoute
   '/category/$category': typeof CategoryCategoryRoute
   '/product/$id': typeof ProductIdRoute
@@ -85,11 +85,11 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/employees': typeof EmployeesRoute
   '/favorites': typeof FavoritesRoute
   '/home': typeof HomeRoute
   '/login': typeof LoginRoute
   '/mycart': typeof MycartRoute
-  '/profile': typeof ProfileRoute
   '/register': typeof RegisterRoute
   '/category/$category': typeof CategoryCategoryRoute
   '/product/$id': typeof ProductIdRoute
@@ -98,11 +98,11 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/employees': typeof EmployeesRoute
   '/favorites': typeof FavoritesRoute
   '/home': typeof HomeRoute
   '/login': typeof LoginRoute
   '/mycart': typeof MycartRoute
-  '/profile': typeof ProfileRoute
   '/register': typeof RegisterRoute
   '/category/$category': typeof CategoryCategoryRoute
   '/product/$id': typeof ProductIdRoute
@@ -112,11 +112,11 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/employees'
     | '/favorites'
     | '/home'
     | '/login'
     | '/mycart'
-    | '/profile'
     | '/register'
     | '/category/$category'
     | '/product/$id'
@@ -124,11 +124,11 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/employees'
     | '/favorites'
     | '/home'
     | '/login'
     | '/mycart'
-    | '/profile'
     | '/register'
     | '/category/$category'
     | '/product/$id'
@@ -136,11 +136,11 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/employees'
     | '/favorites'
     | '/home'
     | '/login'
     | '/mycart'
-    | '/profile'
     | '/register'
     | '/category/$category'
     | '/product/$id'
@@ -149,11 +149,11 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  EmployeesRoute: typeof EmployeesRoute
   FavoritesRoute: typeof FavoritesRoute
   HomeRoute: typeof HomeRoute
   LoginRoute: typeof LoginRoute
   MycartRoute: typeof MycartRoute
-  ProfileRoute: typeof ProfileRoute
   RegisterRoute: typeof RegisterRoute
   CategoryCategoryRoute: typeof CategoryCategoryRoute
   ProductIdRoute: typeof ProductIdRoute
@@ -167,13 +167,6 @@ declare module '@tanstack/react-router' {
       path: '/register'
       fullPath: '/register'
       preLoaderRoute: typeof RegisterRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/profile': {
-      id: '/profile'
-      path: '/profile'
-      fullPath: '/profile'
-      preLoaderRoute: typeof ProfileRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/mycart': {
@@ -202,6 +195,13 @@ declare module '@tanstack/react-router' {
       path: '/favorites'
       fullPath: '/favorites'
       preLoaderRoute: typeof FavoritesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/employees': {
+      id: '/employees'
+      path: '/employees'
+      fullPath: '/employees'
+      preLoaderRoute: typeof EmployeesRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -237,11 +237,11 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  EmployeesRoute: EmployeesRoute,
   FavoritesRoute: FavoritesRoute,
   HomeRoute: HomeRoute,
   LoginRoute: LoginRoute,
   MycartRoute: MycartRoute,
-  ProfileRoute: ProfileRoute,
   RegisterRoute: RegisterRoute,
   CategoryCategoryRoute: CategoryCategoryRoute,
   ProductIdRoute: ProductIdRoute,

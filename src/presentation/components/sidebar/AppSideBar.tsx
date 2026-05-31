@@ -28,6 +28,7 @@ export function AppSidebar() {
   });
 
   const isStatisticsPage = pathname.startsWith("/statistics")
+  const isEmployeesPage = pathname.startsWith("/employees")
 
   if (isStatisticsPage) {
     return (
@@ -81,6 +82,7 @@ export function AppSidebar() {
     );
   }
 
+  if (!isEmployeesPage) {
   return (
     <Sidebar>
       <SidebarHeader>
@@ -112,4 +114,5 @@ export function AppSidebar() {
       </SidebarBody>
     </Sidebar>
   );
+  }
 }
