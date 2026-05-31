@@ -188,18 +188,14 @@ export function ProductGrid({
                 Previous
               </button>
 
-              {Array.from({ length: totalPages }, (_, index) => (
+            
                 <button
                   type="button"
-                  key={index}
-                  onClick={() => changePage(index + 1)}
-                  className={`px-4 py-2 rounded-lg border ${
-                    currentPage === index + 1 ? 'bg-black text-white' : ''
-                  }`}
+                  className= 'px-4 py-2 rounded-lg border bg-black text-white'
                 >
-                  {index + 1}
+                  {currentPage}
                 </button>
-              ))}
+            
 
               <button
                 type="button"

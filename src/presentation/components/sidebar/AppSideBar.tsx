@@ -75,13 +75,6 @@ export function AppSidebar() {
   
             </SidebarDropdown>
   
-            <SidebarDropdown title="Users statistics">
-              <SidebarDropdownItem to="/statistics/totalReview">
-                <SidebarLabel>Total reviews</SidebarLabel>
-              </SidebarDropdownItem>
-  
-    
-            </SidebarDropdown>
           </SidebarSection>
         </SidebarBody>
       </Sidebar>

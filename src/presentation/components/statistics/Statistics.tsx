@@ -265,26 +265,6 @@ export function Statistics({ products, section }: StatisticsProps) {
     );
   }
 
-  if (section === 'totalReview') {
-    return (
-      <StatisticsLayout title="Users statistics">
-        <ChartBox title="Ratings by category">
-          <ResponsiveContainer width="100%" height={300}>
-            <PieChart>
-              <Pie
-                data={productsByCategory}
-                dataKey="count"
-                nameKey="name"
-                outerRadius={100}
-                label
-              />
-              <Tooltip />
-            </PieChart>
-          </ResponsiveContainer>
-        </ChartBox>
-      </StatisticsLayout>
-    );
-  }
 
   return <div className="text-center py-10">Unknown statistics section</div>;
 }
