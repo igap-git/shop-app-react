@@ -1,4 +1,4 @@
-import { AppProductGrid } from '../components/productgrid/AppProductGrid';
+import { AppProductGrid } from '@components/productgrid/AppProductGrid';
 
 export default function HomePage() {
   return (

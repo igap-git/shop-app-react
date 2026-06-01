@@ -1,4 +1,4 @@
-import { useProduct } from '../../hooks/useProduct';
+import { useProduct } from '@hooks/useProduct';
 
 export function ProductDetails({ id }: { id: number }) {
   const { data, isLoading, error } = useProduct(Number(id));

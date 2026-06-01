@@ -1,5 +1,5 @@
 import AuthForm from './AuthForm';
-import type { User } from '../../../domain/types/user';
+import type { User } from '@domain-types/user';
 import { useRouter } from '@tanstack/react-router';
 
 export function AppRegisterForm() {

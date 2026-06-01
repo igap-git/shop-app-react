@@ -1,4 +1,4 @@
-import { AppMyCart } from '../components/mycart/AppMyCart';
+import { AppMyCart } from '@components/mycart/AppMyCart';
 import { Link } from '@tanstack/react-router';
 import { ArrowLeft } from 'lucide-react';
 

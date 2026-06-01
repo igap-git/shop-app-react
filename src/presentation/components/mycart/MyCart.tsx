@@ -1,8 +1,8 @@
 import { Trash2 } from 'lucide-react';
 import { useEffect, useState } from 'react';
-import type { CartItem } from '../../../domain/interfaces/cartitem.interface';
-import { getCurrentCartUseCase } from '../../../application/cart/getCuurentUserCart.usecase';
-import { updateCartUseCase } from '../../../application/cart/updateCart.usecase';
+import type { CartItem } from '@domain-interfaces/cartitem.interface';
+import { getCurrentCartUseCase } from '@application-cart/getCuurentUserCart.usecase';
+import { updateCartUseCase } from '@application-cart/updateCart.usecase';
 
 
 export const MyCart = () => {

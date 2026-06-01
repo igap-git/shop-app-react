@@ -1,6 +1,6 @@
 import { useRouter } from '@tanstack/react-router';
 import AuthForm from './AuthForm';
-import type { User } from '../../../domain/types/user';
+import type { User } from '@domain-types/user';
 
 export function AppLoginForm() {
   const router = useRouter();

@@ -1,12 +1,12 @@
 import { Link } from '@tanstack/react-router';
 import { ArrowLeft, Heart, ShoppingCart } from 'lucide-react';
-import { Route } from '../../app/routes/product.$id';
-import { ProductDetails } from '../components/product/ProductDetails';
+import { Route } from '@routes/product.$id';
+import { ProductDetails } from '@components/product/ProductDetails';
 import { useEffect, useState } from 'react';
-import { useProduct } from '../hooks/useProduct';
-import type { Product } from '../../domain/interfaces/product.interface';
-import type { CartItem } from '../../domain/interfaces/cartitem.interface';
-import type { User } from '../../domain/types/user';
+import { useProduct } from '@hooks/useProduct';
+import type { Product } from '@domain-interfaces/product.interface';
+import type { CartItem } from '@domain-interfaces/cartitem.interface';
+import type { User } from '@domain-types/user';
 
 export default function ProductPage() {
   const { id } = Route.useParams();

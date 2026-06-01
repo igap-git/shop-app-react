@@ -1,4 +1,4 @@
-import { useProducts } from "../../hooks/useProducts";
+import { useProducts } from "@hooks/useProducts";
 import { Statistics } from "./Statistics";
 
 type AppStatisticsProps = {

@@ -1,4 +1,4 @@
-import MainLayout from '../../presentation/layouts/MainLayout';
+import MainLayout from '@layouts/MainLayout';
 import { createRootRoute, redirect } from '@tanstack/react-router';
 
 export const Route = createRootRoute({

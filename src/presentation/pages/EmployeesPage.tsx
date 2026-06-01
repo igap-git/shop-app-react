@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { Link } from '@tanstack/react-router';
 import { ArrowLeftIcon } from '@heroicons/react/24/solid';
-import { useEmployees } from '../hooks/useEmployees';
-import { useEmployeeChat } from '../hooks/useEmployeeChat';
+import { useEmployees } from '@hooks/useEmployees';
+import { useEmployeeChat } from '@hooks/useEmployeeChat';
 
 export function EmployeesPage() {
   const { data: employees = [], isLoading, error } = useEmployees();

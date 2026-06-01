@@ -3,6 +3,46 @@
     "strict": true,
     "strictNullChecks": true,
 
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"],
+      "@assets/*": ["./src/assets/*"],
+      "@routes/*": ["./src/app/routes/*"],
+      "@hooks/*": ["./src/presentation/hooks/*"],
+      "@domain-types/*": [
+        "./src/domain/types/*"
+      ],
+      "@components/*": [
+        "./src/presentation/components/*"
+      ],
+      "@application-auth/*": [
+        "src/application/auth/*"
+      ],
+      "@application-cart/*": [
+        "src/application/cart/*"
+      ],
+      "@application-product/*": [
+        "src/application/product/*"
+      ],
+      "@application-chat/*": [
+        "src/application/chat/*"
+      ],
+      "@application-employees/*": [
+        "src/application/employees/*"
+      ],
+      "@application-favorites/*": [
+        "src/application/favorites/*"
+      ],
+      "@domain-interfaces/*": [
+        "./src/domain/interfaces/*"
+      ],
+      "@infrastructure-storage/*": [
+        "./src/infrastructure/storage/*"
+      ],
+      "@pages/*": ["./src/presentation/pages/*"],
+      "@layouts/*": ["./src/presentation/layouts/*"]
+    },
+
     "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",
     "target": "es2023",
     "lib": ["ES2023", "DOM"],

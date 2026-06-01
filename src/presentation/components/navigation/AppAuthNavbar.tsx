@@ -1,5 +1,5 @@
 import { Navbar, NavbarDivider, NavbarItem, NavbarSection } from './NavBar';
-import logo from '../../../assets/shop-logo.png';
+import logo from '@assets/shop-logo.png';
 
 export function AppAuthNavbar() {
   return (

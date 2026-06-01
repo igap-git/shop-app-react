@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { validateAuthForm } from '../../../application/auth/validateAuthForm.usecase';
+import { validateAuthForm } from '@application-auth/validateAuthForm.usecase';
 
 type AuthFormProps = {
   type: 'login' | 'register';

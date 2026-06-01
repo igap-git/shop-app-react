@@ -1,11 +1,11 @@
-import { useProducts } from '../../hooks/useProducts';
+import { useProducts } from '@hooks/useProducts';
 import { Link, useNavigate } from '@tanstack/react-router';
 import { Heart, Plus } from 'lucide-react';
 import { useEffect, useState } from 'react';
-import type { Product } from '../../../domain/interfaces/product.interface';
-import { loadCurrentUserFavorites } from '../../../infrastructure/storage/userStorage';
-import { addToCartUseCase } from '../../../application/cart/addToCart.usecase';
-import { toggleFavoriteUseCase } from '../../../application/favorites/toggleFavorites.usecase';
+import type { Product } from '@domain-interfaces/product.interface';
+import { loadCurrentUserFavorites } from '@infrastructure-storage/userStorage';
+import { addToCartUseCase } from '@application-cart/addToCart.usecase';
+import { toggleFavoriteUseCase } from '@application-favorites/toggleFavorites.usecase';
 
 export function ProductGrid({
   category,

@@ -18,7 +18,7 @@ import {
 } from '@heroicons/react/24/solid';
 
 import { useRouterState } from '@tanstack/react-router';
-import { useCategories } from '../../hooks/useCategories';
+import { useCategories } from '@hooks/useCategories';
 
 export function AppSidebar() {
   const { data: categories, isLoading } = useCategories();

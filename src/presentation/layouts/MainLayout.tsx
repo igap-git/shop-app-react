@@ -1,7 +1,7 @@
 import { Outlet, useRouterState } from '@tanstack/react-router';
-import { AppNavbar } from '../components/navigation/AppNavbar';
-import { AppSidebar } from '../components/sidebar/AppSideBar';
-import { AppAuthNavbar } from '../components/navigation/AppAuthNavbar';
+import { AppNavbar } from '@components/navigation/AppNavbar';
+import { AppSidebar } from '@components/sidebar/AppSideBar';
+import { AppAuthNavbar } from '@components/navigation/AppAuthNavbar';
 
 export default function MainLayout() {
   const pathname = useRouterState({

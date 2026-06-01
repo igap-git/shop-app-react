@@ -1,38 +1,31 @@
-import { useEffect, useRef, useState } from "react";
-import { createChatMessageUseCase } from "../../application/chat/createChatMessage.usecase";
-import { filterMessagesByEmployeeUseCase } from "../../application/chat/filterMessageByEmployee.usecase";
-import { sendChatMessageUseCase } from "../../application/chat/sendChatMessage.usecase";
-import type { ChatMessage } from "../../domain/types/chatMessage";
+import { useEffect, useRef, useState } from 'react';
+import { createChatMessageUseCase } from '@application-chat/createChatMessage.usecase';
+import { filterMessagesByEmployeeUseCase } from '@application-chat/filterMessageByEmployee.usecase';
+import { sendChatMessageUseCase } from '@application-chat/sendChatMessage.usecase';
+import type { ChatMessage } from '@domain-types/chatMessage';
 
-export const useEmployeeChat = (
-  selectedEmployee: number | null
-) => {
+export const useEmployeeChat = (selectedEmployee: number | null) => {
   const socketRef = useRef<WebSocket | null>(null);
 
-  const [message, setMessage] = useState("");
+  const [message, setMessage] = useState('');
 
-  const [messages, setMessages] =
-    useState<ChatMessage[]>([]);
+  const [messages, setMessages] = useState<ChatMessage[]>([]);
 
   useEffect(() => {
-    const socket = new WebSocket("wss://ws.ifelse.io");
+    const socket = new WebSocket('wss://ws.ifelse.io');
 
     socketRef.current = socket;
 
     socket.onmessage = (event) => {
       if (!selectedEmployee) return;
 
-      const receivedMessage =
-        createChatMessageUseCase({
-          text: event.data,
-          sender: "server",
-          employeeId: selectedEmployee,
-        });
+      const receivedMessage = createChatMessageUseCase({
+        text: event.data,
+        sender: 'server',
+        employeeId: selectedEmployee,
+      });
 
-      setMessages((prev) => [
-        ...prev,
-        receivedMessage,
-      ]);
+      setMessages((prev) => [...prev, receivedMessage]);
     };
 
     return () => {
@@ -50,23 +43,21 @@ export const useEmployeeChat = (
 
     if (!wasSent) return;
 
-    const myMessage =
-      createChatMessageUseCase({
-        text: message,
-        sender: "me",
-        employeeId: selectedEmployee,
-      });
+    const myMessage = createChatMessageUseCase({
+      text: message,
+      sender: 'me',
+      employeeId: selectedEmployee,
+    });
 
     setMessages((prev) => [...prev, myMessage]);
 
-    setMessage("");
+    setMessage('');
   };
 
-  const currentMessages =
-    filterMessagesByEmployeeUseCase(
-      messages,
-      selectedEmployee
-    );
+  const currentMessages = filterMessagesByEmployeeUseCase(
+    messages,
+    selectedEmployee
+  );
 
   return {
     message,

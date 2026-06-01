@@ -1,4 +1,4 @@
-import { Route } from "../../../app/routes/product.$id";
+import { Route } from "@routes/product.$id";
 import { ProductDetails } from "./ProductDetails";
 
 export function AppProduct() {
