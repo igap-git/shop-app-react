@@ -22,7 +22,7 @@ export default defineConfig({
       "@application-auth": path.resolve(__dirname, "./src/application/auth"),
       "@application-cart": path.resolve(__dirname, "./src/application/cart"),
       "@application-chat": path.resolve(__dirname, "./src/application/chat"),
-      "@application-employees": path.resolve(__dirname, "./src/application/empolyees"),
+      "@application-employees": path.resolve(__dirname, "./src/application/employees"),
       "@application-favorites": path.resolve(__dirname, "./src/application/favorites"),
       "@application-product": path.resolve(__dirname, "./src/application/product"),
       "@domain-interfaces": path.resolve(__dirname, "./src/domain/interfaces"),
