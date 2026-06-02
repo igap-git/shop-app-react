@@ -1,5 +1,5 @@
-import type { User, UserRole } from '../../domain/types/user';
-import type { Product } from '../../domain/interfaces/product.interface';
+import type { User, UserRole } from '@domain-types/user';
+import type { Product } from '@domain-interfaces/product.interface';
 
 export const getCurrentUser = (): User | null => {
   return JSON.parse(localStorage.getItem('currentUser') || 'null');

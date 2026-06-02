@@ -27,6 +27,7 @@ export default defineConfig({
       "@application-product": path.resolve(__dirname, "./src/application/product"),
       "@domain-interfaces": path.resolve(__dirname, "./src/domain/interfaces"),
       "@infrastructure-storage": path.resolve(__dirname, "./src/infrastructure/storage"),
+      "@infrastructure-api": path.resolve(__dirname, "./src/infrastructure/api"),
       "@pages": path.resolve(__dirname, './src/presentation/pages'),
       "@layouts": path.resolve(__dirname, './src/presentation/layouts'),
     },

@@ -1,6 +1,6 @@
-import type { Product } from '../../domain/interfaces/product.interface';
-import type { CartItem } from '../../domain/interfaces/cartitem.interface';
-import type { User } from '../../domain/types/user';
+import type { Product } from '@domain-interfaces/product.interface';
+import type { CartItem } from '@domain-interfaces/cartitem.interface';
+import type { User } from '@domain-types/user';
 
 import {
   getCurrentUser,

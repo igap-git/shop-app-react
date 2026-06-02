@@ -1,4 +1,4 @@
-import type { Product } from '../../domain/interfaces/product.interface';
+import type { Product } from '@domain-interfaces/product.interface';
 
 export const fetchProduct = async (id: number): Promise<Product> => {
   const response = await fetch(`https://dummyjson.com/products/${id}`);

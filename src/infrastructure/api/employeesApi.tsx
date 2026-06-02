@@ -1,4 +1,4 @@
-import type { Employee } from "../../domain/interfaces/employee.interface";
+import type { Employee } from "@domain-interfaces/employee.interface";
 
 type EmployeesResponse = {
   users: Employee[];

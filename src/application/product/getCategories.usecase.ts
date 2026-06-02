@@ -1,5 +1,4 @@
-import { fetchCategories } from "../../infrastructure/api/categoriesApi";
-
+import { fetchCategories } from "@/infrastructure/api/categoriesApi";
 export const getCategoriesUseCase = async () => {
   return fetchCategories();
 };

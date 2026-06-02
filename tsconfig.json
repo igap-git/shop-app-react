@@ -42,6 +42,9 @@
       "@infrastructure-storage/*": [
         "./src/infrastructure/storage/*"
       ],
+      "@infrastructure-api/*": [
+        "./src/infrastructure/api/*"
+      ],
       "@pages/*": ["./src/presentation/pages/*"],
       "@layouts/*": ["./src/presentation/layouts/*"]
     }

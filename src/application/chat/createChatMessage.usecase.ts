@@ -1,4 +1,4 @@
-import type { ChatMessage } from "../../domain/types/chatMessage";
+import type { ChatMessage } from "@domain-types/chatMessage";
 
 type CreateChatMessageParams = {
   text: string;

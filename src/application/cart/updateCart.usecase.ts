@@ -1,5 +1,5 @@
-import type { CartItem } from "../../domain/interfaces/cartitem.interface";
-import type { User } from "../../domain/types/user";
+import type { CartItem } from "@domain-interfaces/cartitem.interface";
+import type { User } from "@domain-types/user";
 import {
   getCurrentUser,
   updateUser,

@@ -1,5 +1,5 @@
-import type { Product } from "../../domain/interfaces/product.interface";
-import { getCurrentUser, updateUser } from "../../infrastructure/storage/userStorage";
+import type { Product } from "@domain-interfaces/product.interface";
+import { getCurrentUser, updateUser } from "@infrastructure-storage/userStorage";
 
 export const toggleFavoriteUseCase = (
     product: Product

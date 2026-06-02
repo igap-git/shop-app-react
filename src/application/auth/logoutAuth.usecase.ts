@@ -1,4 +1,4 @@
-import { logoutUser } from "../../infrastructure/storage/userStorage";
+import { logoutUser } from "@infrastructure-storage/userStorage";
 
 export const logoutUseCase = () => {
   logoutUser();
