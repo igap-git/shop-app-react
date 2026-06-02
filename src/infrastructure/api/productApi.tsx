@@ -1,11 +1,14 @@
-import type { Product } from '@domain-interfaces/product.interface';
+import axios from "axios";
+import type { Product } from "@domain-interfaces/product.interface";
 
-export const fetchProduct = async (id: number): Promise<Product> => {
-  const response = await fetch(`https://dummyjson.com/products/${id}`);
+export const fetchProduct =
+  async (
+    id: number
+  ): Promise<Product> => {
+    const response =
+      await axios.get<Product>(
+        `https://dummyjson.com/products/${id}`
+      );
 
-  if (!response.ok) {
-    throw new Error('Failed to fetch product');
-  }
-
-  return response.json();
-};
+    return response.data;
+  };

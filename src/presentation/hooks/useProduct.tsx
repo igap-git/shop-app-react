@@ -6,5 +6,7 @@ export const useProduct = (id: number) => {
   return useQuery<Product>({
     queryKey: ['product', id],
     queryFn: () => getProductByIdUseCase(id),
+    enabled: !!id,
+    staleTime: 1000 * 60 * 5,
   });
 };

@@ -5,5 +5,6 @@ export const useEmployees = () => {
   return useQuery({
     queryKey: ["employees"],
     queryFn: getEmployeesUseCase,
+    staleTime: 1000 * 60 * 10,
   });
 };

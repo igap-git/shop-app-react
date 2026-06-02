@@ -1,4 +1,4 @@
-import type { Product } from '@/domain/types/product';
+import type { Product } from "@/domain/interfaces/product.interface";
 import {
   Bar,
   BarChart,

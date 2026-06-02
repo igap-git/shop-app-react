@@ -5,5 +5,6 @@ export function useProducts(category?: string, search?: string) {
   return useQuery({
     queryKey: ['products', category, search],
     queryFn: () => getProductsUseCase(category, search),
+    staleTime: 1000 * 60 * 5,
   });
 }
