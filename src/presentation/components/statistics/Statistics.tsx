@@ -1,4 +1,4 @@
-import type { Product } from "@/domain/interfaces/product.interface";
+import type { Product } from '@/domain/interfaces/product.interface';
 import {
   Bar,
   BarChart,
@@ -8,7 +8,6 @@ import {
   XAxis,
   YAxis,
 } from 'recharts';
-
 
 type StatisticsProps = {
   products: Product[];
@@ -37,36 +36,33 @@ export function Statistics({ products, section }: StatisticsProps) {
     0
   );
 
-  const topRatedProducts = [...products]
-  .sort((a, b) => b.rating - a.rating)
-  .slice(0, 5)
-  .map((product) => ({
-    name:
-      product.title.length > 20
-        ? `${product.title.slice(0, 20)}...`
-        : product.title,
-    rating: Number(
-      product.rating.toFixed(1)
-    ),
-  }));
-
-  const lowInStockProducts = [...products]
-  .sort((a, b) => a.stock - b.stock)
-  .slice(0, 10)
-  .map((product) => ({
-    name:
-      product.title.length > 22
-        ? `${product.title.slice(0, 22)}...`
-        : product.title,
-    stock: product.stock,
-  }));
-
   const averageDiscount =
     products.reduce((sum, product) => sum + product.discountPercentage, 0) /
     totalProducts;
 
   const lowStockProducts = products.filter((product) => product.stock < 20);
-  
+
+  const topRatedProducts = [...products]
+    .sort((a, b) => b.rating - a.rating)
+    .slice(0, 5)
+    .map((product) => ({
+      name:
+        product.title.length > 20
+          ? `${product.title.slice(0, 20)}...`
+          : product.title,
+      rating: Number(product.rating.toFixed(1)),
+    }));
+
+  const lowInStockProducts = [...products]
+    .sort((a, b) => a.stock - b.stock)
+    .slice(0, 10)
+    .map((product) => ({
+      name:
+        product.title.length > 22
+          ? `${product.title.slice(0, 22)}...`
+          : product.title,
+      stock: product.stock,
+    }));
 
   const productsByCategory = categories.map((category) => ({
     name: category,
@@ -99,7 +95,6 @@ export function Statistics({ products, section }: StatisticsProps) {
     return (
       <StatisticsLayout title="Overview">
         <StatisticCard title="Total products" value={totalProducts} />
-
         <StatisticCard title="Categories" value={categories.length} />
         <StatisticCard title="Total stock" value={totalStock} />
 
@@ -128,14 +123,11 @@ export function Statistics({ products, section }: StatisticsProps) {
     );
   }
 
-  if (section === "topProducts") {
+  if (section === 'topProducts') {
     return (
       <StatisticsLayout title="Products statistics">
         <ChartBox title="Highest Rated Products">
-          <ResponsiveContainer
-            width="100%"
-            height="100%"
-          >
+          <ResponsiveContainer width="100%" height="100%">
             <BarChart
               data={topRatedProducts}
               layout="vertical"
@@ -147,17 +139,9 @@ export function Statistics({ products, section }: StatisticsProps) {
               }}
             >
               <CartesianGrid strokeDasharray="3 3" />
-  
               <XAxis type="number" />
-  
-              <YAxis
-                type="category"
-                dataKey="name"
-                width={140}
-              />
-  
+              <YAxis type="category" dataKey="name" width={140} />
               <Tooltip />
-  
               <Bar dataKey="rating" />
             </BarChart>
           </ResponsiveContainer>
@@ -170,7 +154,7 @@ export function Statistics({ products, section }: StatisticsProps) {
     return (
       <StatisticsLayout title="Products statistics">
         <ChartBox title="Products by category">
-          <ResponsiveContainer width="100%" height={300}>
+          <ResponsiveContainer width="100%" height="100%">
             <BarChart data={productsByCategory}>
               <CartesianGrid strokeDasharray="3 3" />
               <XAxis dataKey="name" />
@@ -184,11 +168,11 @@ export function Statistics({ products, section }: StatisticsProps) {
     );
   }
 
-  if (section === "lowInStock") {
+  if (section === 'lowInStock') {
     return (
-        <StatisticsLayout title="Stock statistics">
+      <StatisticsLayout title="Stock statistics">
         <ChartBox title="Products with lowest stock">
-          <ResponsiveContainer width="100%" height={300}>
+          <ResponsiveContainer width="100%" height="100%">
             <BarChart
               data={lowInStockProducts}
               layout="vertical"
@@ -201,11 +185,7 @@ export function Statistics({ products, section }: StatisticsProps) {
             >
               <CartesianGrid strokeDasharray="3 3" />
               <XAxis type="number" />
-              <YAxis
-                type="category"
-                dataKey="name"
-                width={160}
-              />
+              <YAxis type="category" dataKey="name" width={160} />
               <Tooltip />
               <Bar dataKey="stock" />
             </BarChart>
@@ -219,7 +199,7 @@ export function Statistics({ products, section }: StatisticsProps) {
     return (
       <StatisticsLayout title="Stock statistics">
         <ChartBox title="Stock by category">
-          <ResponsiveContainer width="100%" height={300}>
+          <ResponsiveContainer width="100%" height="100%">
             <BarChart data={stockByCategory}>
               <CartesianGrid strokeDasharray="3 3" />
               <XAxis dataKey="name" />
@@ -237,7 +217,7 @@ export function Statistics({ products, section }: StatisticsProps) {
     return (
       <StatisticsLayout title="Income statistics">
         <ChartBox title="Average price by category">
-          <ResponsiveContainer width="100%" height={300}>
+          <ResponsiveContainer width="100%" height="100%">
             <BarChart data={averagePriceByCategory}>
               <CartesianGrid strokeDasharray="3 3" />
               <XAxis dataKey="name" />
@@ -251,7 +231,6 @@ export function Statistics({ products, section }: StatisticsProps) {
     );
   }
 
-
   return <div className="text-center py-10">Unknown statistics section</div>;
 }
 
@@ -263,10 +242,12 @@ function StatisticsLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="max-w-7xl mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold mb-8">{title}</h1>
+    <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
+      <h1 className="text-2xl sm:text-3xl font-bold mb-6 sm:mb-8">{title}</h1>
 
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">{children}</div>
+      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
+        {children}
+      </div>
     </div>
   );
 }
@@ -279,29 +260,28 @@ function StatisticCard({
   value: string | number;
 }) {
   return (
-    <div className="bg-white rounded-xl shadow p-5">
-      <p className="text-gray-500 text-sm">{title}</p>
-      <p className="text-2xl font-bold mt-2">{value}</p>
+    <div className="bg-white rounded-xl shadow p-4 sm:p-5">
+      <p className="text-gray-500 text-xs sm:text-sm">{title}</p>
+
+      <p className="text-xl sm:text-2xl font-bold mt-2 break-words">{value}</p>
     </div>
   );
 }
 
 function ChartBox({
-    title,
-    children,
-  }: {
-    title: string;
-    children: React.ReactNode;
-  }) {
-    return (
-      <div className="bg-white rounded-xl shadow p-5 md:col-span-2 w-[1000px]">
-        <h2 className="text-xl font-semibold mb-4">
-          {title}
-        </h2>
-  
-        <div className="w-full h-[280px] sm:h-[330px] lg:h-[400px]">
-          {children}
-        </div>
+  title,
+  children,
+}: {
+  title: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <div className="bg-white rounded-xl shadow p-4 sm:p-5 col-span-1 sm:col-span-2 xl:col-span-4 w-full min-w-0 overflow-hidden">
+      <h2 className="text-lg sm:text-xl font-semibold mb-4">{title}</h2>
+
+      <div className="w-full h-[260px] sm:h-[330px] lg:h-[400px] overflow-x-auto">
+        <div className="min-w-[520px] h-full">{children}</div>
       </div>
-    );
-  }
+    </div>
+  );
+}
