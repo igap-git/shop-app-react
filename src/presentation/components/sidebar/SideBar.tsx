@@ -2,26 +2,58 @@ import type { ReactNode } from 'react';
 import { useState } from 'react';
 import { Link, useNavigate } from '@tanstack/react-router';
 import { ChevronDownIcon, ChevronRightIcon } from 'lucide-react';
+import { Menu, X } from 'lucide-react';
+
 
 export const Sidebar = ({ children }: { children: ReactNode }) => {
+  const [isOpen, setIsOpen] = useState(false);
+
   return (
-    <aside
-      className="
-        w-44
-        sm:w-52
-        md:w-60
-        lg:w-72
-        h-max
-        border-r
-        bg-white
-        flex flex-col
-        transition-all
-      "
-    >
-      {children}
-    </aside>
+    <>
+      <div className="hidden max-[800px]:block w-full bg-gray-50 border-b p-3">
+        <button
+          type="button"
+          onClick={() => setIsOpen((prev) => !prev)}
+          aria-label="Toggle menu"
+          aria-expanded={isOpen}
+          aria-controls="mobile-menu"
+          className="w-full flex items-center justify-between px-3 py-2 rounded-lg"
+        >
+          <span className="text-sm font-medium">Menu</span>
+  
+          {isOpen ? (
+            <X className="w-5 h-5" />
+          ) : (
+            <Menu className="w-5 h-5" />
+          )}
+        </button>
+  
+        {isOpen && (
+          <div id="mobile-menu" className="mt-3 flex flex-col gap-2">
+            {children}
+          </div>
+        )}
+      </div>
+  
+      <aside
+        className="
+          w-44
+          sm:w-52
+          md:w-60
+          lg:w-72
+          h-max
+          border-r
+          bg-white
+          flex flex-col
+          transition-all
+          max-[800px]:hidden
+        "
+      >
+        {children}
+      </aside>
+    </>
   );
-};
+}
 
 export const SidebarHeader = ({ children }: { children: ReactNode }) => {
   return <div className="p-2 sm:p-3 md:p-4 border-b">{children}</div>;

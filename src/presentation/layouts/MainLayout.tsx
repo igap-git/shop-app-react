@@ -16,10 +16,10 @@ export default function MainLayout() {
     <div className="flex flex-col min-h-screen">
       {isAuthPage ? <AppAuthNavbar /> : <AppNavbar />}
 
-      <div className="flex flex-1">
+      <div className="flex flex-1 max-[800px]:flex-col">
         {!isAuthPage && !isProductPage && !isMyCartPage && <AppSidebar />}
 
-        <div className="flex-1 p-6 flex justify-center">
+        <div className="flex-1 p-6">
           {isAuthPage ? (
             <div className="w-full flex items-center justify-center">
               <Outlet />

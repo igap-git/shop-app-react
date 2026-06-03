@@ -4,18 +4,22 @@ import { ArrowLeft } from 'lucide-react';
 
 export default function MyCartPage() {
   return (
-    <div className="flex flex-col items-center justify-center p-6">
-      <div className="w-full max-w-4xl">
+    <>
+      <div>
         <Link
           to="/home"
-          className="flex items-center gap-2 text-gray-700 hover:text-black transition mb-6"
+          className="flex gap-2 text-gray-700 hover:text-black transition mb-6 self-start"
         >
           <ArrowLeft size={20} />
           <span>Back To Shop</span>
         </Link>
-
-        <AppMyCart />
       </div>
-    </div>
+
+      <div className="p-6">
+        <div className="w-full max-w-4xl mx-auto">
+          <AppMyCart />
+        </div>
+      </div>
+    </>
   );
 }

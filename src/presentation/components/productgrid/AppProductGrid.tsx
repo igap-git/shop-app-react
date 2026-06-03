@@ -15,7 +15,7 @@ export function AppProductGrid({
   };
 
   return (
-    <section className="max-w-7xl mx-auto px-4 py-8">
+    <section className="max-w-7xl mx-auto">
       <ProductGrid
         search={searchParams.search}
         category={searchParams.category}
