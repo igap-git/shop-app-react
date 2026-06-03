@@ -1,6 +1,6 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Link } from '@tanstack/react-router';
-import { ArrowLeftIcon } from '@heroicons/react/24/solid';
+import { ArrowLeft } from 'lucide-react';
 import { useEmployees } from '@hooks/useEmployees';
 import { useEmployeeChat } from '@hooks/useEmployeeChat';
 
@@ -16,6 +16,17 @@ export function EmployeesPage() {
   const { message, setMessage, sendMessage, currentMessages } =
     useEmployeeChat(selectedEmployee);
 
+  const chatContainerRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    if (!chatContainerRef.current) return;
+
+    chatContainerRef.current.scrollTo({
+      top: chatContainerRef.current.scrollHeight,
+      behavior: 'smooth',
+    });
+  }, [currentMessages]);
+
   if (isLoading) {
     return <div className="text-center py-10">Loading employees...</div>;
   }
@@ -29,218 +40,228 @@ export function EmployeesPage() {
   }
 
   return (
-    <section
-      className="
-        w-full
-        min-h-[85vh]
-        bg-white
-        rounded-2xl
-        sm:rounded-3xl
-        border
-        shadow-sm
-        overflow-hidden
-        flex
-        flex-col
-        lg:flex-row
-      "
-    >
-      <div
+    <>
+      <Link
+        to="/home"
         className="
-          w-full
-          lg:w-[380px]
-          xl:w-[450px]
-          border-b
-          lg:border-b-0
-          lg:border-r
-          max-h-[320px]
-          lg:max-h-none
-          overflow-y-auto
+          flex
+          gap-2
+          text-gray-700
+          hover:text-black
+          transition
+          mb-6
+          self-start
         "
       >
-        <div className="p-4 sm:p-5 border-b">
-          <Link
-            to="/home"
-            className="
-              inline-flex
-              items-center
-              gap-2
-              mb-4
-              text-sm
-              font-medium
-              text-gray-600
-              hover:text-black
-              transition
-            "
-          >
-            <ArrowLeftIcon className="w-5 h-5" />
-            Back to shop
-          </Link>
+        <ArrowLeft size={20} />
+        Back To Shop
+      </Link>
 
-          <h1 className="text-xl sm:text-2xl font-bold">Contacts</h1>
+      <section
+        className="
+          w-full
+          max-w-4xl
+          h-[70vh]
+          mx-auto
+          mt-6
+          bg-white
+          rounded-3xl
+          border
+          shadow-sm
+          overflow-hidden
+          flex
+          flex-col
+          lg:flex-row
+        "
+      >
+        <div
+          className="
+            w-full
+            md:w-[280px]
+            lg:w-[320px]
+            border-b
+            md:border-b-0
+            md:border-r
+            max-h-[210px]
+            md:max-h-none
+            overflow-y-auto
+            bg-white
+          "
+        >
+          <div className="p-3 border-b">
+            <h1 className="text-lg font-bold">Contacts</h1>
 
-          <p className="text-sm text-gray-500">Start a conversation</p>
+            <p className="text-xs text-gray-500">Start a conversation</p>
+          </div>
+
+          <div className="grid grid-cols-1">
+            {employees.map((employee) => (
+              <button
+                key={employee.id}
+                type="button"
+                onClick={() => setSelectedEmployee(employee.id)}
+                className={`
+                  w-full
+                  flex
+                  items-center
+                  gap-3
+                  px-3
+                  py-2.5
+                  text-left
+                  hover:bg-gray-50
+                  transition
+                  min-w-0
+                  ${selectedEmployee === employee.id ? 'bg-gray-100' : ''}
+                `}
+              >
+                <img
+                  src={employee.image}
+                  alt={employee.firstName}
+                  className="
+                    w-9
+                    h-9
+                    rounded-full
+                    object-cover
+                    shrink-0
+                  "
+                />
+
+                <div className="min-w-0">
+                  <h2 className="font-semibold text-sm truncate">
+                    {employee.firstName} {employee.lastName}
+                  </h2>
+
+                  <p className="text-xs text-gray-500 truncate">
+                    {employee.email}
+                  </p>
+                </div>
+              </button>
+            ))}
+          </div>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1">
-          {employees.map((employee) => (
-            <button
-              key={employee.id}
-              type="button"
-              onClick={() => setSelectedEmployee(employee.id)}
-              className={`
-                w-full
-                flex
-                items-center
-                gap-3
-                sm:gap-4
-                p-3
-                sm:p-4
-                text-left
-                hover:bg-gray-50
-                transition
-                min-w-0
-                ${selectedEmployee === employee.id ? 'bg-gray-100' : ''}
-              `}
-            >
-              <img
-                src={employee.image}
-                alt={employee.firstName}
-                className="
-                  w-11 h-11
-                  sm:w-14 sm:h-14
-                  rounded-full
-                  object-cover
-                  shrink-0
-                "
-              />
+        <div className="flex-1 flex flex-col min-h-0">
+          {activeEmployee ? (
+            <>
+              <div className="border-b px-3 py-2.5 flex items-center gap-3">
+                <img
+                  src={activeEmployee.image}
+                  alt={activeEmployee.firstName}
+                  className="
+                    w-9
+                    h-9
+                    rounded-full
+                    object-cover
+                    shrink-0
+                  "
+                />
 
-              <div className="min-w-0">
-                <h2 className="font-semibold text-sm sm:text-base truncate">
-                  {employee.firstName} {employee.lastName}
-                </h2>
+                <div className="min-w-0">
+                  <h2 className="font-semibold text-sm truncate">
+                    {activeEmployee.firstName} {activeEmployee.lastName}
+                  </h2>
 
-                <p className="text-xs sm:text-sm text-gray-500 truncate">
-                  {employee.email}
-                </p>
+                  <p className="text-xs text-gray-500 truncate">
+                    {activeEmployee.email}
+                  </p>
+                </div>
               </div>
-            </button>
-          ))}
-        </div>
-      </div>
 
-      <div className="flex-1 flex flex-col min-h-[520px]">
-        {activeEmployee ? (
-          <>
-            <div className="border-b p-4 sm:p-5 flex items-center gap-3 sm:gap-4">
-              <img
-                src={activeEmployee.image}
-                alt={activeEmployee.firstName}
-                className="
-                  w-10 h-10
-                  sm:w-12 sm:h-12
-                  rounded-full
-                  object-cover
-                  shrink-0
-                "
-              />
-
-              <div className="min-w-0">
-                <h2 className="font-semibold text-base sm:text-lg truncate">
-                  {activeEmployee.firstName} {activeEmployee.lastName}
-                </h2>
-
-                <p className="text-xs sm:text-sm text-gray-500 truncate">
-                  {activeEmployee.email}
-                </p>
-              </div>
-            </div>
-
-            <div className="flex-1 p-4 sm:p-5 overflow-y-auto bg-gray-50 space-y-3">
-              {currentMessages.length === 0 ? (
-                <p className="text-gray-400 text-center mt-20">
-                  No messages yet
-                </p>
-              ) : (
-                currentMessages.map((msg) => (
-                  <div
-                    key={msg.id}
-                    className={`flex ${
-                      msg.sender === 'me' ? 'justify-end' : 'justify-start'
-                    }`}
-                  >
-                    <div
-                      className={`
-                        max-w-[80%]
-                        sm:max-w-xs
-                        px-4
-                        py-3
-                        rounded-2xl
-                        text-sm
-                        sm:text-base
-                        break-words
-                        ${
-                          msg.sender === 'me'
-                            ? 'bg-black text-white'
-                            : 'bg-white border'
-                        }
-                      `}
-                    >
-                      {msg.text}
-                    </div>
-                  </div>
-                ))
-              )}
-            </div>
-
-            <div className="border-t p-3 sm:p-4 flex flex-col sm:flex-row gap-3">
-              <input
-                type="text"
-                value={message}
-                onChange={(e) => setMessage(e.target.value)}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter') {
-                    sendMessage();
-                  }
-                }}
-                placeholder="Write a message..."
+              <div
+                ref={chatContainerRef}
                 className="
                   flex-1
-                  border
-                  rounded-2xl
-                  px-4
+                  px-3
                   py-3
-                  outline-none
-                  text-sm
-                  sm:text-base
-                  min-w-0
-                "
-              />
-
-              <button
-                type="button"
-                onClick={sendMessage}
-                className="
-                  bg-black
-                  text-white
-                  px-6
-                  py-3
-                  rounded-2xl
-                  text-sm
-                  sm:text-base
-                  hover:opacity-90
-                  transition
+                  overflow-y-auto
+                  bg-gray-50
+                  space-y-2
                 "
               >
-                Send
-              </button>
+                {currentMessages.length === 0 ? (
+                  <p className="text-gray-400 text-center mt-16 text-sm">
+                    No messages yet
+                  </p>
+                ) : (
+                  currentMessages.map((msg) => (
+                    <div
+                      key={msg.id}
+                      className={`flex ${
+                        msg.sender === 'me' ? 'justify-end' : 'justify-start'
+                      }`}
+                    >
+                      <div
+                        className={`
+                            max-w-[75%]
+                            px-3
+                            py-2
+                            rounded-2xl
+                            text-sm
+                            leading-relaxed
+                            break-words
+                            ${
+                              msg.sender === 'me'
+                                ? 'bg-black text-white rounded-br-md'
+                                : 'bg-white border rounded-bl-md'
+                            }
+                          `}
+                      >
+                        {msg.text}
+                      </div>
+                    </div>
+                  ))
+                )}
+              </div>
+
+              <div className="border-t p-2.5 flex gap-2 bg-white">
+                <input
+                  type="text"
+                  value={message}
+                  onChange={(e) => setMessage(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') {
+                      sendMessage();
+                    }
+                  }}
+                  placeholder="Write a message..."
+                  className="
+                    flex-1
+                    border
+                    rounded-full
+                    px-4
+                    py-2.5
+                    outline-none
+                    text-sm
+                    min-w-0
+                  "
+                />
+
+                <button
+                  type="button"
+                  onClick={sendMessage}
+                  className="
+                    bg-black
+                    text-white
+                    px-4
+                    py-2.5
+                    rounded-full
+                    text-sm
+                    hover:opacity-90
+                    transition
+                    shrink-0
+                  "
+                >
+                  Send
+                </button>
+              </div>
+            </>
+          ) : (
+            <div className="flex-1 flex items-center justify-center text-gray-400 text-center px-4 text-sm">
+              Select a contact to start chatting
             </div>
-          </>
-        ) : (
-          <div className="flex-1 flex items-center justify-center text-gray-400 text-center px-4">
-            Select a contact to start chatting
-          </div>
-        )}
-      </div>
-    </section>
+          )}
+        </div>
+      </section>
+    </>
   );
 }

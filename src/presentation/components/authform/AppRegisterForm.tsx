@@ -43,6 +43,7 @@ export function AppRegisterForm() {
         password: data.password,
         cart: [],
         favorites: [],
+        chatMessages: [],
       };
 
       const updatedUsers = [...users, newUser];

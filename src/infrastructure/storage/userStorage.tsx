@@ -1,5 +1,6 @@
 import type { User, UserRole } from '@domain-types/user';
 import type { Product } from '@domain-interfaces/product.interface';
+import type { ChatMessage } from '@/domain/types/chatMessage';
 
 export const getCurrentUser = (): User | null => {
   return JSON.parse(localStorage.getItem('currentUser') || 'null');
@@ -32,6 +33,30 @@ export const loadCurrentUserFavorites = (): Product[] => {
   const user = getCurrentUser();
   return user?.favorites ?? [];
 };
+export const loadCurrentUserMessages = (): ChatMessage[] => {
+  const user = getCurrentUser();
+  return user?.chatMessages ?? [];
+};
+
+export const saveMessages = (
+  messages: ChatMessage[]
+) => {
+  const user = getCurrentUser();
+
+  if (!user) return;
+
+  const updatedUser = {
+    ...user,
+    chatMessages: messages,
+  };
+
+  updateUser(updatedUser);
+};
+
+export const getSavedMessages =
+  (): ChatMessage[] => {
+    return loadCurrentUserMessages();
+  };
 
 export const updateUser = (updatedUser: User) => {
   const users = getUsers();

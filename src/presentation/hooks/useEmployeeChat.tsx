@@ -3,6 +3,9 @@ import { createChatMessageUseCase } from '@application-chat/createChatMessage.us
 import { filterMessagesByEmployeeUseCase } from '@application-chat/filterMessageByEmployee.usecase';
 import { sendChatMessageUseCase } from '@application-chat/sendChatMessage.usecase';
 import type { ChatMessage } from '@domain-types/chatMessage';
+import { getSavedMessages, saveMessages } from '@/infrastructure/storage/userStorage';
+
+
 
 export const useEmployeeChat = (selectedEmployee: number | null) => {
   const socketRef = useRef<WebSocket | null>(null);
@@ -11,11 +14,17 @@ export const useEmployeeChat = (selectedEmployee: number | null) => {
 
   const [message, setMessage] = useState('');
 
-  const [messages, setMessages] = useState<ChatMessage[]>([]);
+  const [messages, setMessages] = useState<ChatMessage[]>(() =>
+    getSavedMessages()
+  );
 
   useEffect(() => {
     selectedEmployeeRef.current = selectedEmployee;
   }, [selectedEmployee]);
+
+  useEffect(() => {
+    saveMessages(messages);
+  }, [messages]);
 
   useEffect(() => {
     const socket = new WebSocket('wss://ws.ifelse.io');
@@ -43,6 +52,8 @@ export const useEmployeeChat = (selectedEmployee: number | null) => {
 
   const sendMessage = () => {
     if (!selectedEmployee) return;
+
+    if (!message.trim()) return;
 
     const wasSent = sendChatMessageUseCase({
       socket: socketRef.current,
