@@ -1,4 +1,5 @@
 import type { Product } from '@/domain/interfaces/product.interface';
+import { useMemo } from 'react';
 import {
   Bar,
   BarChart,
@@ -15,109 +16,151 @@ type StatisticsProps = {
 };
 
 export function Statistics({ products, section }: StatisticsProps) {
-  if (products.length === 0) {
-    return <div className="text-center py-10">No statistics available</div>;
-  }
+  const statistics = useMemo(() => {
+    if (products.length === 0) {
+      return null;
+    }
 
-  const totalProducts = products.length;
+    const categoryMap = new Map<
+      string,
+      {
+        count: number;
+        stock: number;
+        totalPrice: number;
+      }
+    >();
 
-  const categories = [...new Set(products.map((product) => product.category))];
+    let totalPrice = 0;
+    let totalRating = 0;
+    let totalStock = 0;
+    let totalReviews = 0;
+    let totalDiscount = 0;
 
-  const averagePrice =
-    products.reduce((sum, product) => sum + product.price, 0) / totalProducts;
+    for (const product of products) {
+      totalPrice += product.price;
+      totalRating += product.rating;
+      totalStock += product.stock;
+      totalReviews += product.reviews?.length ?? 0;
+      totalDiscount += product.discountPercentage;
 
-  const averageRating =
-    products.reduce((sum, product) => sum + product.rating, 0) / totalProducts;
+      const currentCategory = categoryMap.get(product.category) ?? {
+        count: 0,
+        stock: 0,
+        totalPrice: 0,
+      };
 
-  const totalStock = products.reduce((sum, product) => sum + product.stock, 0);
+      categoryMap.set(product.category, {
+        count: currentCategory.count + 1,
+        stock: currentCategory.stock + product.stock,
+        totalPrice: currentCategory.totalPrice + product.price,
+      });
+    }
 
-  const totalReviews = products.reduce(
-    (sum, product) => sum + (product.reviews?.length ?? 0),
-    0
-  );
+    const totalProducts = products.length;
 
-  const averageDiscount =
-    products.reduce((sum, product) => sum + product.discountPercentage, 0) /
-    totalProducts;
+    const categories = [...categoryMap.keys()];
 
-  const lowStockProducts = products.filter((product) => product.stock < 20);
+    const lowStockProducts = products.filter((product) => product.stock < 20);
 
-  const topRatedProducts = [...products]
-    .sort((a, b) => b.rating - a.rating)
-    .slice(0, 5)
-    .map((product) => ({
-      name:
-        product.title.length > 20
-          ? `${product.title.slice(0, 20)}...`
-          : product.title,
-      rating: Number(product.rating.toFixed(1)),
-    }));
+    const topRatedProducts = [...products]
+      .sort((a, b) => b.rating - a.rating)
+      .slice(0, 5)
+      .map((product) => ({
+        name:
+          product.title.length > 20
+            ? `${product.title.slice(0, 20)}...`
+            : product.title,
+        rating: Number(product.rating.toFixed(1)),
+      }));
 
-  const lowInStockProducts = [...products]
-    .sort((a, b) => a.stock - b.stock)
-    .slice(0, 10)
-    .map((product) => ({
-      name:
-        product.title.length > 22
-          ? `${product.title.slice(0, 22)}...`
-          : product.title,
-      stock: product.stock,
-    }));
+    const lowInStockProducts = [...products]
+      .sort((a, b) => a.stock - b.stock)
+      .slice(0, 10)
+      .map((product) => ({
+        name:
+          product.title.length > 22
+            ? `${product.title.slice(0, 22)}...`
+            : product.title,
+        stock: product.stock,
+      }));
 
-  const productsByCategory = categories.map((category) => ({
-    name: category,
-    count: products.filter((product) => product.category === category).length,
-  }));
-
-  const stockByCategory = categories.map((category) => ({
-    name: category,
-    stock: products
-      .filter((product) => product.category === category)
-      .reduce((sum, product) => sum + product.stock, 0),
-  }));
-
-  const averagePriceByCategory = categories.map((category) => {
-    const categoryProducts = products.filter(
-      (product) => product.category === category
+    const productsByCategory = [...categoryMap.entries()].map(
+      ([category, data]) => ({
+        name: category,
+        count: data.count,
+      })
     );
 
-    const average =
-      categoryProducts.reduce((sum, product) => sum + product.price, 0) /
-      categoryProducts.length;
+    const stockByCategory = [...categoryMap.entries()].map(
+      ([category, data]) => ({
+        name: category,
+        stock: data.stock,
+      })
+    );
+
+    const averagePriceByCategory = [...categoryMap.entries()].map(
+      ([category, data]) => ({
+        name: category,
+        price: Number((data.totalPrice / data.count).toFixed(2)),
+      })
+    );
 
     return {
-      name: category,
-      price: Number(average.toFixed(2)),
+      totalProducts,
+      categories,
+      averagePrice: totalPrice / totalProducts,
+      averageRating: totalRating / totalProducts,
+      totalStock,
+      totalReviews,
+      averageDiscount: totalDiscount / totalProducts,
+      lowStockProducts,
+      topRatedProducts,
+      lowInStockProducts,
+      productsByCategory,
+      stockByCategory,
+      averagePriceByCategory,
     };
-  });
+  }, [products]);
+
+  if (!statistics) {
+    return <div className="text-center py-10">No statistics available</div>;
+  }
 
   if (section === 'overview') {
     return (
       <StatisticsLayout title="Overview">
-        <StatisticCard title="Total products" value={totalProducts} />
-        <StatisticCard title="Categories" value={categories.length} />
-        <StatisticCard title="Total stock" value={totalStock} />
+        <StatisticCard
+          title="Total products"
+          value={statistics.totalProducts}
+        />
+
+        <StatisticCard
+          title="Categories"
+          value={statistics.categories.length}
+        />
+
+        <StatisticCard title="Total stock" value={statistics.totalStock} />
 
         <StatisticCard
           title="Low stock products"
-          value={lowStockProducts.length}
+          value={statistics.lowStockProducts.length}
         />
 
         <StatisticCard
           title="Average price"
-          value={`$${averagePrice.toFixed(2)}`}
+          value={`$${statistics.averagePrice.toFixed(2)}`}
         />
 
         <StatisticCard
           title="Average discount"
-          value={`${averageDiscount.toFixed(2)}%`}
+          value={`${statistics.averageDiscount.toFixed(2)}%`}
         />
 
-        <StatisticCard title="Total reviews" value={totalReviews} />
+        <StatisticCard title="Total reviews" value={statistics.totalReviews} />
 
         <StatisticCard
           title="Average rating"
-          value={averageRating.toFixed(2)}
+          value={statistics.averageRating.toFixed(2)}
         />
       </StatisticsLayout>
     );
@@ -129,7 +172,7 @@ export function Statistics({ products, section }: StatisticsProps) {
         <ChartBox title="Highest Rated Products">
           <ResponsiveContainer width="100%" height="100%">
             <BarChart
-              data={topRatedProducts}
+              data={statistics.topRatedProducts}
               layout="vertical"
               margin={{
                 left: 40,
@@ -139,9 +182,13 @@ export function Statistics({ products, section }: StatisticsProps) {
               }}
             >
               <CartesianGrid strokeDasharray="3 3" />
+
               <XAxis type="number" />
+
               <YAxis type="category" dataKey="name" width={140} />
+
               <Tooltip />
+
               <Bar dataKey="rating" />
             </BarChart>
           </ResponsiveContainer>
@@ -155,11 +202,15 @@ export function Statistics({ products, section }: StatisticsProps) {
       <StatisticsLayout title="Products statistics">
         <ChartBox title="Products by category">
           <ResponsiveContainer width="100%" height="100%">
-            <BarChart data={productsByCategory}>
+            <BarChart data={statistics.productsByCategory}>
               <CartesianGrid strokeDasharray="3 3" />
+
               <XAxis dataKey="name" />
+
               <YAxis />
+
               <Tooltip />
+
               <Bar dataKey="count" />
             </BarChart>
           </ResponsiveContainer>
@@ -174,7 +225,7 @@ export function Statistics({ products, section }: StatisticsProps) {
         <ChartBox title="Products with lowest stock">
           <ResponsiveContainer width="100%" height="100%">
             <BarChart
-              data={lowInStockProducts}
+              data={statistics.lowInStockProducts}
               layout="vertical"
               margin={{
                 left: 60,
@@ -184,9 +235,13 @@ export function Statistics({ products, section }: StatisticsProps) {
               }}
             >
               <CartesianGrid strokeDasharray="3 3" />
+
               <XAxis type="number" />
+
               <YAxis type="category" dataKey="name" width={160} />
+
               <Tooltip />
+
               <Bar dataKey="stock" />
             </BarChart>
           </ResponsiveContainer>
@@ -200,11 +255,15 @@ export function Statistics({ products, section }: StatisticsProps) {
       <StatisticsLayout title="Stock statistics">
         <ChartBox title="Stock by category">
           <ResponsiveContainer width="100%" height="100%">
-            <BarChart data={stockByCategory}>
+            <BarChart data={statistics.stockByCategory}>
               <CartesianGrid strokeDasharray="3 3" />
+
               <XAxis dataKey="name" />
+
               <YAxis />
+
               <Tooltip />
+
               <Bar dataKey="stock" />
             </BarChart>
           </ResponsiveContainer>
@@ -218,11 +277,15 @@ export function Statistics({ products, section }: StatisticsProps) {
       <StatisticsLayout title="Income statistics">
         <ChartBox title="Average price by category">
           <ResponsiveContainer width="100%" height="100%">
-            <BarChart data={averagePriceByCategory}>
+            <BarChart data={statistics.averagePriceByCategory}>
               <CartesianGrid strokeDasharray="3 3" />
+
               <XAxis dataKey="name" />
+
               <YAxis />
+
               <Tooltip />
+
               <Bar dataKey="price" />
             </BarChart>
           </ResponsiveContainer>

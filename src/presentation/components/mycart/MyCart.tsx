@@ -1,8 +1,8 @@
-import { Trash2 } from 'lucide-react';
-import { useEffect, useState } from 'react';
 import type { CartItem } from '@domain-interfaces/cartitem.interface';
 import { getCurrentCartUseCase } from '@application-cart/getCuurentUserCart.usecase';
 import { updateCartUseCase } from '@application-cart/updateCart.usecase';
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import { Trash2 } from 'lucide-react';
 
 export const MyCart = () => {
   const [cart, setCart] = useState<CartItem[]>([]);
@@ -11,47 +11,58 @@ export const MyCart = () => {
     setCart(getCurrentCartUseCase());
   }, []);
 
-  const removeFromCart = (id: number) => {
-    const updatedCart = cart.filter((product) => product.id !== id);
+  const removeFromCart = useCallback((id: number) => {
+    setCart((prevCart) => {
+      const updatedCart = prevCart.filter((product) => product.id !== id);
 
-    setCart(updatedCart);
-    updateCartUseCase(updatedCart);
-  };
+      updateCartUseCase(updatedCart);
 
-  const decreaseQuantity = (id: number) => {
-    const updatedCart = cart
-      .map((product) =>
+      return updatedCart;
+    });
+  }, []);
+
+  const decreaseQuantity = useCallback((id: number) => {
+    setCart((prevCart) => {
+      const updatedCart = prevCart
+        .map((product) =>
+          product.id === id
+            ? {
+                ...product,
+                quantity: product.quantity - 1,
+              }
+            : product
+        )
+        .filter((product) => product.quantity > 0);
+
+      updateCartUseCase(updatedCart);
+
+      return updatedCart;
+    });
+  }, []);
+
+  const increaseQuantity = useCallback((id: number) => {
+    setCart((prevCart) => {
+      const updatedCart = prevCart.map((product) =>
         product.id === id
           ? {
               ...product,
-              quantity: product.quantity - 1,
+              quantity: product.quantity + 1,
             }
           : product
-      )
-      .filter((product) => product.quantity > 0);
+      );
 
-    setCart(updatedCart);
-    updateCartUseCase(updatedCart);
-  };
+      updateCartUseCase(updatedCart);
 
-  const increaseQuantity = (id: number) => {
-    const updatedCart = cart.map((product) =>
-      product.id === id
-        ? {
-            ...product,
-            quantity: product.quantity + 1,
-          }
-        : product
+      return updatedCart;
+    });
+  }, []);
+
+  const totalPrice = useMemo(() => {
+    return cart.reduce(
+      (sum, product) => sum + product.price * (product.quantity ?? 1),
+      0
     );
-
-    setCart(updatedCart);
-    updateCartUseCase(updatedCart);
-  };
-
-  const totalPrice = cart.reduce(
-    (sum, product) => sum + product.price * (product.quantity ?? 1),
-    0
-  );
+  }, [cart]);
 
   if (cart.length === 0) {
     return (
