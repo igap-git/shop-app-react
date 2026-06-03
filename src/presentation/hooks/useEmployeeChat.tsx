@@ -7,9 +7,15 @@ import type { ChatMessage } from '@domain-types/chatMessage';
 export const useEmployeeChat = (selectedEmployee: number | null) => {
   const socketRef = useRef<WebSocket | null>(null);
 
+  const selectedEmployeeRef = useRef<number | null>(null);
+
   const [message, setMessage] = useState('');
 
   const [messages, setMessages] = useState<ChatMessage[]>([]);
+
+  useEffect(() => {
+    selectedEmployeeRef.current = selectedEmployee;
+  }, [selectedEmployee]);
 
   useEffect(() => {
     const socket = new WebSocket('wss://ws.ifelse.io');
@@ -17,12 +23,14 @@ export const useEmployeeChat = (selectedEmployee: number | null) => {
     socketRef.current = socket;
 
     socket.onmessage = (event) => {
-      if (!selectedEmployee) return;
+      const employeeId = selectedEmployeeRef.current;
+
+      if (!employeeId) return;
 
       const receivedMessage = createChatMessageUseCase({
         text: event.data,
         sender: 'server',
-        employeeId: selectedEmployee,
+        employeeId,
       });
 
       setMessages((prev) => [...prev, receivedMessage]);
@@ -31,7 +39,7 @@ export const useEmployeeChat = (selectedEmployee: number | null) => {
     return () => {
       socket.close();
     };
-  }, [selectedEmployee]);
+  }, []);
 
   const sendMessage = () => {
     if (!selectedEmployee) return;

@@ -1,15 +1,11 @@
 import type { CartItem } from '@domain-interfaces/cartitem.interface';
 import { getCurrentCartUseCase } from '@application-cart/getCuurentUserCart.usecase';
 import { updateCartUseCase } from '@application-cart/updateCart.usecase';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { Trash2 } from 'lucide-react';
 
 export const MyCart = () => {
-  const [cart, setCart] = useState<CartItem[]>([]);
-
-  useEffect(() => {
-    setCart(getCurrentCartUseCase());
-  }, []);
+  const [cart, setCart] = useState<CartItem[]>(() => getCurrentCartUseCase());
 
   const removeFromCart = useCallback((id: number) => {
     setCart((prevCart) => {

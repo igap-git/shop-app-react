@@ -1,9 +1,12 @@
-export const fetchCategories = async (): Promise<string[]> => {
-  const response = await fetch('https://dummyjson.com/products/category-list');
+import axios from "axios";
 
-  if (!response.ok) {
-    throw new Error('Failed to fetch categories');
-  }
+export const fetchCategories =
+  async (): Promise<string[]> => {
+    const response = await axios.get<
+      string[]
+    >(
+      "https://dummyjson.com/products/category-list"
+    );
 
-  return response.json();
-};
+    return response.data;
+  };

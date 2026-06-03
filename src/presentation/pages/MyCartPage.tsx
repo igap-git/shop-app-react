@@ -11,7 +11,7 @@ export default function MyCartPage() {
           className="flex items-center gap-2 text-gray-700 hover:text-black transition mb-6"
         >
           <ArrowLeft size={20} />
-          <span>Back</span>
+          <span>Back To Shop</span>
         </Link>
 
         <AppMyCart />

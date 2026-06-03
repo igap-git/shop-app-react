@@ -1,12 +1,16 @@
+import { useState } from 'react';
 import { Link } from '@tanstack/react-router';
 import { ArrowLeft, Heart, ShoppingCart } from 'lucide-react';
 import { Route } from '@routes/product.$id';
 import { ProductDetails } from '@components/product/ProductDetails';
-import { useEffect, useState } from 'react';
 import { useProduct } from '@hooks/useProduct';
-import type { Product } from '@domain-interfaces/product.interface';
 import type { CartItem } from '@domain-interfaces/cartitem.interface';
 import type { User } from '@domain-types/user';
+
+import {
+  getCurrentUser,
+  updateUser,
+} from '@infrastructure-storage/userStorage';
 
 export default function ProductPage() {
   const { id } = Route.useParams();
@@ -15,55 +19,44 @@ export default function ProductPage() {
 
   const { data: product } = useProduct(productId);
 
-  const [favorites, setFavorites] = useState<Product[]>([]);
+  const [currentUser, setCurrentUser] = useState<User | null>(() => getCurrentUser());
 
   const [isAddedToCart, setIsAddedToCart] = useState(false);
 
-  const getCurrentUser = (): User | null => {
-    return JSON.parse(localStorage.getItem('currentUser') || 'null');
+  const searchParams = Route.useSearch() as {
+    page?: number;
+    category?: string;
+    search?: string;
   };
 
-  useEffect(() => {
-    const user = getCurrentUser();
+  const isFavorite =
+    currentUser?.favorites.some((favorite) => favorite.id === productId) ??
+    false;
 
-    setFavorites(user?.favorites ?? []);
-  }, []);
-
-  const isFavorite = favorites.some((fav) => fav.id === productId);
+  const saveUserChanges = (updatedUser: User) => {
+    updateUser(updatedUser);
+    setCurrentUser(updatedUser);
+  };
 
   const toggleFavorite = () => {
-    if (!product) return;
-
-    const user = getCurrentUser();
-
-    if (!user) return;
+    if (!product || !currentUser) return;
 
     const updatedFavorites = isFavorite
-      ? user.favorites.filter((fav) => fav.id !== productId)
-      : [...user.favorites, product];
+      ? currentUser.favorites.filter((favorite) => favorite.id !== productId)
+      : [...currentUser.favorites, product];
 
     const updatedUser: User = {
-      ...user,
+      ...currentUser,
       favorites: updatedFavorites,
     };
 
-    localStorage.setItem('currentUser', JSON.stringify(updatedUser));
-
-    const users: User[] = JSON.parse(localStorage.getItem('users') || '[]');
-
-    const updatedUsers = users.map((u) => (u.id === user.id ? updatedUser : u));
-
-    localStorage.setItem('users', JSON.stringify(updatedUsers));
-
-    setFavorites(updatedFavorites);
+    saveUserChanges(updatedUser);
   };
 
   const handleAddToCart = () => {
-    if (!product || isAddedToCart) return;
+    if (!product || !currentUser || isAddedToCart) return;
 
-    const user = getCurrentUser();
-
-    if (!user) return;
+    const isInCart = currentUser.cart.some((item) => item.id === product.id);
 
     const productToAdd: CartItem = {
       id: product.id,
@@ -73,10 +66,8 @@ export default function ProductPage() {
       quantity: 1,
     };
 
-    const isInCart = user.cart.some((item) => item.id === product.id);
-
     const updatedCart = isInCart
-      ? user.cart.map((item) =>
+      ? currentUser.cart.map((item) =>
           item.id === product.id
             ? {
                 ...item,
@@ -84,32 +75,20 @@ export default function ProductPage() {
               }
             : item
         )
-      : [...user.cart, productToAdd];
+      : [...currentUser.cart, productToAdd];
 
     const updatedUser: User = {
-      ...user,
+      ...currentUser,
       cart: updatedCart,
     };
 
-    localStorage.setItem('currentUser', JSON.stringify(updatedUser));
-
-    const users: User[] = JSON.parse(localStorage.getItem('users') || '[]');
-
-    const updatedUsers = users.map((u) => (u.id === user.id ? updatedUser : u));
-
-    localStorage.setItem('users', JSON.stringify(updatedUsers));
+    saveUserChanges(updatedUser);
 
     setIsAddedToCart(true);
 
     setTimeout(() => {
       setIsAddedToCart(false);
     }, 2000);
-  };
-
-  const searchParams = Route.useSearch() as {
-    page?: number;
-    category?: string;
-    search?: string;
   };
 
   return (

@@ -1,4 +1,4 @@
-import type { ChatMessage } from "@domain-types/chatMessage";
+import type { ChatMessage } from '@domain-types/chatMessage';
 
 type CreateChatMessageParams = {
   text: string;
@@ -10,7 +10,7 @@ export const createChatMessageUseCase = ({
   text,
   sender,
   employeeId,
-}: CreateChatMessageParams): ChatMessage=> {
+}: CreateChatMessageParams): ChatMessage => {
   return {
     id: Date.now(),
     text,

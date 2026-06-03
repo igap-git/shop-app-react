@@ -1,7 +1,7 @@
 import { useProducts } from '@hooks/useProducts';
 import { Link, useNavigate } from '@tanstack/react-router';
 import { Heart, Plus } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import type { Product } from '@domain-interfaces/product.interface';
 import { loadCurrentUserFavorites } from '@infrastructure-storage/userStorage';
 import { addToCartUseCase } from '@application-cart/addToCart.usecase';
@@ -21,15 +21,11 @@ export function ProductGrid({
   const navigate = useNavigate();
 
   const [addedProducts, setAddedProducts] = useState<number[]>([]);
-  const [favorites, setFavorites] = useState<Product[]>([]);
+  const [favorites, setFavorites] = useState<Product[]>(() => loadCurrentUserFavorites());
   const { data, isLoading, error } = useProducts(
     favoritesOnly ? undefined : category,
     favoritesOnly ? undefined : search
   );
-
-  useEffect(() => {
-    setFavorites(loadCurrentUserFavorites());
-  }, []);
 
   const toggleFavorite = (
     e: React.MouseEvent,
