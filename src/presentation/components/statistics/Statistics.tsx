@@ -1,5 +1,5 @@
 import type { Product } from '@/domain/interfaces/product.interface';
-import { useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import {
   Bar,
   BarChart,
@@ -66,10 +66,7 @@ export function Statistics({ products, section }: StatisticsProps) {
       .sort((a, b) => b.rating - a.rating)
       .slice(0, 5)
       .map((product) => ({
-        name:
-          product.title.length > 20
-            ? `${product.title.slice(0, 20)}...`
-            : product.title,
+        name: product.title,
         rating: Number(product.rating.toFixed(1)),
       }));
 
@@ -77,10 +74,7 @@ export function Statistics({ products, section }: StatisticsProps) {
       .sort((a, b) => a.stock - b.stock)
       .slice(0, 10)
       .map((product) => ({
-        name:
-          product.title.length > 22
-            ? `${product.title.slice(0, 22)}...`
-            : product.title,
+        name: product.title,
         stock: product.stock,
       }));
 
@@ -166,135 +160,52 @@ export function Statistics({ products, section }: StatisticsProps) {
     );
   }
 
-  if (section === 'topProducts') {
-    return (
-      <StatisticsLayout title="Products statistics">
-        <ChartBox title="Highest Rated Products">
-          <ResponsiveContainer width="100%" height="100%">
-            <BarChart
-              data={statistics.topRatedProducts}
-              layout="vertical"
-              margin={{
-                left: 40,
-                right: 20,
-                top: 10,
-                bottom: 10,
-              }}
-            >
-              <CartesianGrid strokeDasharray="3 3" />
+  const chartMap = {
+    topProducts: {
+      title: 'Products statistics',
+      chartTitle: 'Highest Rated Products',
+      data: statistics.topRatedProducts,
+      dataKey: 'rating',
+    },
+    productsByCategory: {
+      title: 'Products statistics',
+      chartTitle: 'Products by category',
+      data: statistics.productsByCategory,
+      dataKey: 'count',
+    },
+    lowInStock: {
+      title: 'Stock statistics',
+      chartTitle: 'Products with lowest stock',
+      data: statistics.lowInStockProducts,
+      dataKey: 'stock',
+    },
+    stockByCategory: {
+      title: 'Stock statistics',
+      chartTitle: 'Stock by category',
+      data: statistics.stockByCategory,
+      dataKey: 'stock',
+    },
+    averagePriceByCategory: {
+      title: 'Income statistics',
+      chartTitle: 'Average price by category',
+      data: statistics.averagePriceByCategory,
+      dataKey: 'price',
+    },
+  };
 
-              <XAxis type="number" />
+  const chart = chartMap[section as keyof typeof chartMap];
 
-              <YAxis type="category" dataKey="name" width={140} />
-
-              <Tooltip />
-
-              <Bar dataKey="rating" />
-            </BarChart>
-          </ResponsiveContainer>
-        </ChartBox>
-      </StatisticsLayout>
-    );
+  if (!chart) {
+    return <div className="text-center py-10">Unknown statistics section</div>;
   }
 
-  if (section === 'productsByCategory') {
-    return (
-      <StatisticsLayout title="Products statistics">
-        <ChartBox title="Products by category">
-          <ResponsiveContainer width="100%" height="100%">
-            <BarChart data={statistics.productsByCategory}>
-              <CartesianGrid strokeDasharray="3 3" />
-
-              <XAxis dataKey="name" />
-
-              <YAxis />
-
-              <Tooltip />
-
-              <Bar dataKey="count" />
-            </BarChart>
-          </ResponsiveContainer>
-        </ChartBox>
-      </StatisticsLayout>
-    );
-  }
-
-  if (section === 'lowInStock') {
-    return (
-      <StatisticsLayout title="Stock statistics">
-        <ChartBox title="Products with lowest stock">
-          <ResponsiveContainer width="100%" height="100%">
-            <BarChart
-              data={statistics.lowInStockProducts}
-              layout="vertical"
-              margin={{
-                left: 60,
-                right: 20,
-                top: 10,
-                bottom: 10,
-              }}
-            >
-              <CartesianGrid strokeDasharray="3 3" />
-
-              <XAxis type="number" />
-
-              <YAxis type="category" dataKey="name" width={160} />
-
-              <Tooltip />
-
-              <Bar dataKey="stock" />
-            </BarChart>
-          </ResponsiveContainer>
-        </ChartBox>
-      </StatisticsLayout>
-    );
-  }
-
-  if (section === 'stockByCategory') {
-    return (
-      <StatisticsLayout title="Stock statistics">
-        <ChartBox title="Stock by category">
-          <ResponsiveContainer width="100%" height="100%">
-            <BarChart data={statistics.stockByCategory}>
-              <CartesianGrid strokeDasharray="3 3" />
-
-              <XAxis dataKey="name" />
-
-              <YAxis />
-
-              <Tooltip />
-
-              <Bar dataKey="stock" />
-            </BarChart>
-          </ResponsiveContainer>
-        </ChartBox>
-      </StatisticsLayout>
-    );
-  }
-
-  if (section === 'averagePriceByCategory') {
-    return (
-      <StatisticsLayout title="Income statistics">
-        <ChartBox title="Average price by category">
-          <ResponsiveContainer width="100%" height="100%">
-            <BarChart data={statistics.averagePriceByCategory}>
-              <CartesianGrid strokeDasharray="3 3" />
-
-              <XAxis dataKey="name" />
-
-              <YAxis />
-
-              <Tooltip />
-
-              <Bar dataKey="price" />
-            </BarChart>
-          </ResponsiveContainer>
-        </ChartBox>
-      </StatisticsLayout>
-    );
-  }
-
-  return <div className="text-center py-10">Unknown statistics section</div>;
+  return (
+    <StatisticsLayout title={chart.title}>
+      <ChartBox title={chart.chartTitle}>
+        <VerticalBarChart data={chart.data} dataKey={chart.dataKey} />
+      </ChartBox>
+    </StatisticsLayout>
+  );
 }
 
 function StatisticsLayout({
@@ -305,8 +216,8 @@ function StatisticsLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
-      <h1 className="text-2xl sm:text-3xl font-bold mb-6 sm:mb-8">{title}</h1>
+    <div className="w-full max-w-6xl mx-auto px-3 sm:px-5 lg:px-6 py-4 sm:py-6">
+      <h1 className="text-xl sm:text-2xl font-bold mb-4 sm:mb-6">{title}</h1>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
         {children}
@@ -323,10 +234,10 @@ function StatisticCard({
   value: string | number;
 }) {
   return (
-    <div className="bg-white rounded-xl shadow p-4 sm:p-5">
-      <p className="text-gray-500 text-xs sm:text-sm">{title}</p>
+    <div className="bg-white rounded-xl shadow p-4">
+      <p className="text-gray-500 text-sm">{title}</p>
 
-      <p className="text-xl sm:text-2xl font-bold mt-2 break-words">{value}</p>
+      <p className="text-2xl font-bold mt-2">{value}</p>
     </div>
   );
 }
@@ -339,12 +250,89 @@ function ChartBox({
   children: React.ReactNode;
 }) {
   return (
-    <div className="bg-white rounded-xl shadow p-4 sm:p-5 col-span-1 sm:col-span-2 xl:col-span-4 w-full min-w-0 overflow-hidden">
-      <h2 className="text-lg sm:text-xl font-semibold mb-4">{title}</h2>
+    <div className="bg-white rounded-xl shadow p-4 col-span-1 sm:col-span-2 xl:col-span-4 overflow-hidden">
+      <h2 className="text-lg font-semibold mb-4">{title}</h2>
 
-      <div className="w-full h-[260px] sm:h-[330px] lg:h-[400px] overflow-x-auto">
-        <div className="min-w-[520px] h-full">{children}</div>
+      <div className="w-full h-[420px] sm:h-[480px] lg:h-[520px]">
+        {children}
       </div>
+    </div>
+  );
+}
+
+function VerticalBarChart({
+  data,
+  dataKey,
+}: {
+  data: {
+    name: string;
+    [key: string]: string | number;
+  }[];
+  dataKey: string;
+}) {
+  const [fontSize, setFontSize] = useState(11);
+
+  useEffect(() => {
+    const updateFontSize = () => {
+      const width = window.innerWidth;
+
+      const minWidth = 320;
+      const maxWidth = 1440;
+
+      const calculatedSize =
+        5 + ((width - minWidth) / (maxWidth - minWidth)) * (11 - 5);
+
+      setFontSize(Math.max(5, Math.min(11, calculatedSize)));
+    };
+
+    updateFontSize();
+
+    window.addEventListener('resize', updateFontSize);
+
+    return () => {
+      window.removeEventListener('resize', updateFontSize);
+    };
+  }, []);
+
+  return (
+    <div className="w-full h-full outline-none overflow-hidden" tabIndex={-1}>
+      <ResponsiveContainer width="100%" height="100%">
+        <BarChart
+          data={data}
+          barCategoryGap="15%"
+          margin={{
+            top: 10,
+            right: 20,
+            left: -10,
+            bottom: 150,
+          }}
+        >
+          <CartesianGrid strokeDasharray="3 3" />
+
+          <XAxis
+            dataKey="name"
+            angle={-45}
+            textAnchor="end"
+            interval={0}
+            height={180}
+            tick={{
+              fontSize,
+            }}
+            tickMargin={10}
+          />
+
+          <YAxis
+            width={35}
+            tick={{
+              fontSize,
+            }}
+          />
+
+          <Tooltip />
+
+          <Bar dataKey={dataKey} />
+        </BarChart>
+      </ResponsiveContainer>
     </div>
   );
 }
