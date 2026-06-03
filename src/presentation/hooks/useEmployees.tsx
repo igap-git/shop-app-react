@@ -1,10 +1,10 @@
+import { fetchEmployees } from "@/infrastructure/api/employeesApi";
 import { useQuery } from "@tanstack/react-query";
-import { getEmployeesUseCase } from "@application-employees/getEmployees.usecase";
 
 export const useEmployees = () => {
   return useQuery({
     queryKey: ["employees"],
-    queryFn: getEmployeesUseCase,
+    queryFn: fetchEmployees,
     staleTime: 1000 * 60 * 10,
   });
 };

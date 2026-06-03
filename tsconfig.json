@@ -27,9 +27,6 @@
       "@application-favorites/*": [
         "src/application/favorites/*"
       ],
-      "@application-product/*": [
-        "src/application/product/*"
-      ],
       "@application-chat/*": [
         "src/application/chat/*"
       ],

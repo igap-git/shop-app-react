@@ -21,9 +21,6 @@
       "@application-cart/*": [
         "src/application/cart/*"
       ],
-      "@application-product/*": [
-        "src/application/product/*"
-      ],
       "@application-chat/*": [
         "src/application/chat/*"
       ],

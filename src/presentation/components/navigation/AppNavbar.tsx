@@ -1,8 +1,7 @@
 import { useRouter } from '@tanstack/react-router';
 import { Navbar, NavbarDivider, NavbarItem, NavbarSection } from './NavBar';
 import logo from '@assets/shop-logo.png';
-import { logoutUseCase } from '@application-auth/logoutAuth.usecase';
-import { getCurrentUserRole } from '@infrastructure-storage/userStorage';
+import { getCurrentUserRole, logoutUser } from '@infrastructure-storage/userStorage';
 
 export function AppNavbar() {
   const router = useRouter();
@@ -10,8 +9,7 @@ export function AppNavbar() {
   const role = getCurrentUserRole();
 
   const handleLogout = () => {
-    logoutUseCase();
-
+    logoutUser();
     router.navigate({
       to: "/login",
     });
@@ -31,8 +29,6 @@ export function AppNavbar() {
         <NavbarItem to="/mycart">
           My Cart
         </NavbarItem>
-
-        
 
         {role === "ADMIN" && (
           <>

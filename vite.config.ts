@@ -24,7 +24,6 @@ export default defineConfig({
       "@application-chat": path.resolve(__dirname, "./src/application/chat"),
       "@application-employees": path.resolve(__dirname, "./src/application/employees"),
       "@application-favorites": path.resolve(__dirname, "./src/application/favorites"),
-      "@application-product": path.resolve(__dirname, "./src/application/product"),
       "@domain-interfaces": path.resolve(__dirname, "./src/domain/interfaces"),
       "@infrastructure-storage": path.resolve(__dirname, "./src/infrastructure/storage"),
       "@infrastructure-api": path.resolve(__dirname, "./src/infrastructure/api"),

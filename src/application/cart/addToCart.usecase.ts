@@ -1,11 +1,7 @@
 import type { Product } from '@domain-interfaces/product.interface';
 import type { CartItem } from '@domain-interfaces/cartitem.interface';
 import type { User } from '@domain-types/user';
-
-import {
-  getCurrentUser,
-  updateUser,
-} from '../../infrastructure/storage/userStorage';
+import { getCurrentUser, updateUser,} from '@infrastructure-storage/userStorage';
 
 export const addToCartUseCase = (product: Product): User | null => {
   const user = getCurrentUser();
