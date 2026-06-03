@@ -1,5 +1,4 @@
-import { useState } from 'react';
-import { validateAuthForm } from '@application-auth/validateAuthForm.usecase';
+import { useForm } from 'react-hook-form';
 
 type AuthFormProps = {
   type: 'login' | 'register';
@@ -10,6 +9,7 @@ type AuthFormProps = {
 export type AuthFormData = {
   email: string;
   password: string;
+  confirmPassword?: string;
   isAdmin: boolean;
 };
 
@@ -18,56 +18,42 @@ export default function AuthForm({
   onSubmit,
   loading = false,
 }: AuthFormProps) {
-  const [email, setEmail] = useState('');
-
-  const [password, setPassword] = useState('');
-
-  const [confirmPassword, setConfirmPassword] = useState('');
-
-  const [error, setError] = useState('');
-
-  const [isAdmin, setIsAdmin] = useState(false);
-
   const isLogin = type === 'login';
   const isRegister = type === 'register';
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const {
+    register,
+    handleSubmit,
+    watch,
+    setError,
+    formState: { errors },
+  } = useForm<AuthFormData>({
+    defaultValues: {
+      email: '',
+      password: '',
+      confirmPassword: '',
+      isAdmin: false,
+    },
+  });
 
-    setError('');
-
-    const validationError = validateAuthForm(
-      email,
-      password,
-      confirmPassword,
-      isRegister
-    );
-
-    if (validationError) {
-      setError(validationError);
-      return;
-    }
-
+  const submitForm = async (data: AuthFormData) => {
     try {
       await onSubmit({
-        email,
-        password,
-        isAdmin,
+        email: data.email,
+        password: data.password,
+        isAdmin: data.isAdmin,
       });
     } catch (err) {
-      if (err instanceof Error) {
-        setError(err.message);
-        return;
-      }
-
-      setError('Something went wrong');
+      setError('root', {
+        message: err instanceof Error ? err.message : 'Something went wrong',
+      });
     }
   };
 
   return (
     <div className="w-full max-w-lg mx-auto">
       <form
-        onSubmit={handleSubmit}
+        onSubmit={handleSubmit(submitForm)}
         className="
           bg-white
           border border-gray-200
@@ -95,9 +81,14 @@ export default function AuthForm({
 
             <input
               type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
               placeholder="john@example.com"
+              {...register('email', {
+                required: 'Email is required',
+                pattern: {
+                  value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                  message: 'Email is invalid',
+                },
+              })}
               className="
                 w-full
                 border border-gray-200
@@ -111,6 +102,12 @@ export default function AuthForm({
                 focus:border-black
               "
             />
+
+            {errors.email && (
+              <p className="text-sm text-red-500 mt-2">
+                {errors.email.message}
+              </p>
+            )}
           </div>
 
           <div>
@@ -118,9 +115,14 @@ export default function AuthForm({
 
             <input
               type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
               placeholder="••••••••"
+              {...register('password', {
+                required: 'Password is required',
+                minLength: {
+                  value: 6,
+                  message: 'Password must be at least 6 characters',
+                },
+              })}
               className="
                 w-full
                 border border-gray-200
@@ -134,6 +136,12 @@ export default function AuthForm({
                 focus:border-black
               "
             />
+
+            {errors.password && (
+              <p className="text-sm text-red-500 mt-2">
+                {errors.password.message}
+              </p>
+            )}
           </div>
 
           {isRegister && (
@@ -145,28 +153,44 @@ export default function AuthForm({
 
                 <input
                   type="password"
-                  value={confirmPassword}
-                  onChange={(e) => setConfirmPassword(e.target.value)}
                   placeholder="••••••••"
+                  {...register('confirmPassword', {
+                    required: isRegister
+                      ? 'Confirm password is required'
+                      : false,
+                    validate: (value) => {
+                      if (value !== watch('password')) {
+                        return 'Passwords do not match';
+                      }
+
+                      return true;
+                    },
+                  })}
                   className="
-                  w-full
-                  border border-gray-200
-                  rounded-2xl
-                  px-5 py-4
-                  text-base
-                  outline-none
-                  transition
-                  focus:ring-2
-                  focus:ring-black
-                  focus:border-black
-                "
+                    w-full
+                    border border-gray-200
+                    rounded-2xl
+                    px-5 py-4
+                    text-base
+                    outline-none
+                    transition
+                    focus:ring-2
+                    focus:ring-black
+                    focus:border-black
+                  "
                 />
+
+                {errors.confirmPassword && (
+                  <p className="text-sm text-red-500 mt-2">
+                    {errors.confirmPassword.message}
+                  </p>
+                )}
               </div>
+
               <label className="flex items-center gap-3 rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 cursor-pointer hover:bg-gray-100 transition">
                 <input
                   type="checkbox"
-                  checked={isAdmin}
-                  onChange={(e) => setIsAdmin(e.target.checked)}
+                  {...register('isAdmin')}
                   className="h-5 w-5 accent-emerald-600 cursor-pointer"
                 />
 
@@ -178,9 +202,9 @@ export default function AuthForm({
           )}
         </div>
 
-        {error && (
+        {errors.root && (
           <div className="text-sm text-red-500 bg-red-50 border border-red-100 rounded-xl px-4 py-3">
-            {error}
+            {errors.root.message}
           </div>
         )}
 
